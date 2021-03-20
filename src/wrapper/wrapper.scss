@@ -33,6 +33,7 @@
 
     &--selected {
         border: $border-line;
+        z-index: 2;
 
         &:hover {
             cursor: move;

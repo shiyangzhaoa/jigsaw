@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 
 import Dots from '../dots';
@@ -16,7 +16,6 @@ const prefix = 'jigsaw-wrapper';
 
 const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
     const { store, setStore } = useContext(Context);
-    const wrpRef = useRef<HTMLDivElement>();
     const { schema } = store;
     const { config, manifest } = schema[id];
     const { name } = manifest;
@@ -25,10 +24,6 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
     const { width, height, x = 0, y = 0 } = config;
 
     const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>, row: Row, col: Column) => {
-        if (!wrpRef.current) {
-            throw new Error('render error');
-        }
-
         const t1 = windowToWrapper(document.body, event.clientX, event.clientY);
         const [m, n] = getReverseBy(config, row, col);
 
@@ -149,7 +144,6 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
             }}
             className={prefix}
             id={`E${id}`}
-            ref={wrpRef}
         >
             <div
                 className={clsx(`${prefix}__control`, { [`${prefix}--selected`]: isSelected })}

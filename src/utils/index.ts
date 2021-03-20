@@ -1,5 +1,7 @@
 import { Manifest, ContainerStore, Config, Schema } from '../common/type';
 
+export const isNumber = (val: any): val is number => typeof val === 'number';
+
 export const isDefine = (val: any) => val !== undefined && val !== null;
 
 export const lastBy = <T>(arr: T[]) => arr[arr.length - 1];

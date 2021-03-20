@@ -1,0 +1,41 @@
+@import '../variables.scss';
+
+.jigsaw-wrapper {
+    display: block;
+    position: absolute;
+
+    &__floor {
+        position: relative;
+        width: 100%;
+        background: rgb(243, 222, 222);
+        box-sizing: border-box;
+
+        &--selected {
+            border: $border-line;
+        }
+    }
+
+    &__block {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    &__control {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        box-sizing: border-box;
+    }
+
+    &--selected {
+        border: $border-line;
+
+        &:hover {
+            cursor: move;
+        }
+    }
+}

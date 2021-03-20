@@ -1,0 +1,61 @@
+@import "../variables.scss";
+
+.jigsaw-dots {
+    box-sizing: border-box;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border: $border-line;
+
+    &__left-top {
+        transform: translateX(-50%) translateY(-50%);
+        cursor: nwse-resize;
+    }
+
+    &__center-top {
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        cursor: ns-resize;
+    }
+
+    &__right-top {
+        right: 0;
+        transform: translateX(50%) translateY(-50%);
+        cursor: nesw-resize;
+    }
+
+    &__left-center {
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        cursor: ew-resize;
+    }
+
+    &__right-center {
+        right: 0;
+        top: 50%;
+        transform: translateX(50%) translateY(-50%);
+        cursor: ew-resize;
+    }
+
+    &__left-bottom {
+        left: 0px;
+        bottom: 0px;
+        transform: translateX(-50%) translateY(50%);
+        cursor: nesw-resize;
+    }
+
+    &__center-bottom {
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%) translateY(50%);
+        cursor: ns-resize;
+    }
+
+    &__right-bottom {
+        right: 0;
+        bottom: 0;
+        transform: translateX(50%) translateY(50%);
+        cursor: nwse-resize;
+    }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "jigsaw",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "module": "build/index.esm.js",
+  "files": [
+    "build"
+  ],
+  "types": "build/index.d.ts",
+  "description": "low-code",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "storybook": "start-storybook -p 6006",
+    "storybook:export": "build-storybook",
+    "generate": "node ./script/create-component",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shiyangzhaoa/jigsaw.git"
+  },
+  "keywords": [
+    "React",
+    "Component",
+    "Typescript"
+  ],
+  "author": "shiyangzhaoa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shiyangzhaoa/jigsaw/issues"
+  },
+  "homepage": "https://github.com/shiyangzhaoa/jigsaw#readme",
+  "peerDependencies": {
+    "react": ">=17.0.1",
+    "react-dom": ">=17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "@storybook/react": "^6.1.12",
+    "@testing-library/jest-dom": "^5.5.0",
+    "@testing-library/react": "^11.2.3",
+    "@types/jest": "^24.0.24",
+    "@types/react": "^16.9.12",
+    "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^4.17.0",
+    "@typescript-eslint/parser": "^4.17.0",
+    "antd": "^4.14.0",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react-app": "^10.0.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.6.3",
+    "node-sass": "^5.0.0",
+    "prettier": "^2.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-json-view": "^1.21.3",
+    "rollup": "^2.36.1",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "sass-loader": "^10.1.1",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "clsx": "^1.1.1"
+  }
+}

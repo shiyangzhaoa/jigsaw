@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button } from 'antd';
 
-import useSchema from '../../hooks/use-schema';
 import config from './config';
 import manifest from './manifest';
 import { Props } from './props';
@@ -9,8 +8,6 @@ import { Props } from './props';
 import './index.scss';
 
 const JsButton = ({ btnText, ...props }: Props) => {
-    const [store] = useSchema();
-
     return (
         <Button className="js-button" {...props}>
             {btnText}
@@ -19,7 +16,7 @@ const JsButton = ({ btnText, ...props }: Props) => {
 };
 
 const options = {
-    view: JsButton,
+    view: memo(JsButton),
     config,
     manifest,
 };

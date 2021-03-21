@@ -99,6 +99,32 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
         });
     };
 
+    const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
+        event.target.style.cursor = 'move';
+        requestAnimationFrame(() => {
+            event.dataTransfer.effectAllowed = 'copyMove';
+            const ele = event.target as HTMLDivElement;
+            ele.remove();
+            document.body.appendChild(ele);
+        });
+
+        return true;
+    };
+
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        const ele = event.target as HTMLDivElement;
+        console.log('ele', ele);
+
+        return true;
+    };
+
+    const handleDragEnd = (event: React.DragEvent<HTMLDivElement>) => {
+        (event.target as any).style.display = 'block';
+
+        return true;
+    };
+
     if (name === 'App') {
         return <>{children}</>;
     }
@@ -111,6 +137,7 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
                 }}
                 className={`${prefix}__floor`}
                 id={`E${id}`}
+                onDragOver={handleDragOver}
             >
                 <div
                     className={clsx(`${prefix}__control`, {
@@ -148,10 +175,13 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
             }}
             className={prefix}
             id={`E${id}`}
+            draggable={canDrag && isSelected}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
         >
             <div
                 className={clsx(`${prefix}__control`, { [`${prefix}--selected`]: isSelected })}
-                onClick={handleWidgetClick}
+                onMouseDown={handleWidgetClick}
             >
                 {isSelected &&
                     dotsList.map(([row, col], index) => (

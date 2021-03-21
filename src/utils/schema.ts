@@ -42,7 +42,18 @@ export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
     const parent = schema[schema[id].parent];
     const brother = parent?.childrenId;
     const cloneSchema = { ...schema };
-    delete cloneSchema[id];
+
+    (function deepDelete(id: string) {
+        const cur = cloneSchema[id];
+
+        if (cur.childrenId.length !== 0) {
+            cur.childrenId.forEach((id) => {
+                deepDelete(id);
+            });
+        } else {
+            delete cloneSchema[id];
+        }
+    })(id);
 
     return {
         ...cloneSchema,
@@ -101,8 +112,22 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
 };
 
 // TODO: 实现有问题
-export const replaceBy = () => {
-    //
+export const replaceBy = (schema: SchemeMap, from: string, to: string): SchemeMap => {
+    const parent = schema[schema[from].parent];
+    const brother = parent?.childrenId;
+    const cloneSchema = { ...schema };
+
+    const realSchema = addBy(schema, to, cloneSchema[from]);
+
+    delete realSchema[from];
+
+    return {
+        ...realSchema,
+        [parent.id]: {
+            ...parent,
+            childrenId: brother?.filter((chId) => chId === from),
+        },
+    };
 };
 
 export const initBy = (store: ContainerStore, manifests: Manifest[]) => {

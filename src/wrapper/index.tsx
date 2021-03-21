@@ -21,9 +21,16 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
     const { name } = manifest;
 
     const isSelected = id && store.activityId === id;
-    const { width, height, x = 0, y = 0 } = config;
+    const { width, height, x = 0, y = 0, canDrag } = config;
 
-    const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>, row: Row, col: Column) => {
+    const handleDotsMouseDown = (
+        event: React.MouseEvent<HTMLDivElement>,
+        row: Row,
+        col: Column,
+    ) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         const t1 = windowToWrapper(document.body, event.clientX, event.clientY);
         const [m, n] = getReverseBy(config, row, col);
 
@@ -85,7 +92,7 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
         document.addEventListener('mouseup', handleMouseUp);
     };
 
-    const handleClick = () => {
+    const handleWidgetClick = () => {
         setStore({
             ...store,
             activityId: id,
@@ -109,13 +116,13 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
                     className={clsx(`${prefix}__control`, {
                         [`${prefix}__floor--selected`]: isSelected,
                     })}
-                    onClick={handleClick}
+                    onClick={handleWidgetClick}
                 >
                     {isSelected && (
                         <Dots
                             row="center"
                             column="bottom"
-                            onMouseDown={(evt) => handleMouseDown(evt, 'center', 'bottom')}
+                            onMouseDown={(evt) => handleDotsMouseDown(evt, 'center', 'bottom')}
                         />
                     )}
                 </div>
@@ -144,7 +151,7 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
         >
             <div
                 className={clsx(`${prefix}__control`, { [`${prefix}--selected`]: isSelected })}
-                onClick={handleClick}
+                onClick={handleWidgetClick}
             >
                 {isSelected &&
                     dotsList.map(([row, col], index) => (
@@ -152,7 +159,7 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
                             key={index}
                             row={row}
                             column={col}
-                            onMouseDown={(evt) => handleMouseDown(evt, row, col)}
+                            onMouseDown={(evt) => handleDotsMouseDown(evt, row, col)}
                         />
                     ))}
             </div>

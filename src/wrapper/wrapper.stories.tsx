@@ -34,17 +34,14 @@ const Container = () => {
         const { childrenId, id, config, manifest, props } = scheme;
         const component = componentMap[manifest.name];
 
-        const getChildren = () => (
-            <>
-                {childrenId.length !== 0
-                    ? childrenId.map((id) => renderWrapper(store.schema[id]))
-                    : null}
-            </>
-        );
+        const getChildren =
+            childrenId.length !== 0
+                ? childrenId.map((id) => renderWrapper(store.schema[id]))
+                : null;
 
         return (
             <Wrapper key={id} id={id} config={config}>
-                {createElement(component.view, props, getChildren())}
+                {createElement(component.view, props, getChildren)}
             </Wrapper>
         );
     };

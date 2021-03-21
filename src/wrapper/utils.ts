@@ -1,8 +1,9 @@
+import { isNumber } from '../utils';
 import { Config, Coordinate, Row, Column } from '../common/type';
 
 export const getDotsLocBy = (config: Config) => {
     const { x, y, width, height } = config;
-    if (typeof width !== 'number' || typeof height !== 'number') {
+    if (typeof height !== 'number') {
         throw new Error('width/height should be a number');
     }
 
@@ -11,7 +12,7 @@ export const getDotsLocBy = (config: Config) => {
         y,
     };
     const two = {
-        x: x + width,
+        x: isNumber(width) ? x + width : x,
         y,
     };
     const three = {
@@ -19,7 +20,7 @@ export const getDotsLocBy = (config: Config) => {
         y: y + height,
     };
     const four = {
-        x: x + width,
+        x: isNumber(width) ? x + width : x,
         y: y + height,
     };
 

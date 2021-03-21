@@ -5,7 +5,7 @@ import Dots from '../dots';
 
 import { Row, Column, Coordinate } from '../common/type';
 import { number2px, windowToWrapper } from '../utils';
-import Context from '../common/context';
+import ctx from '../common/context';
 import { WrapperProps } from './wrapper.types';
 import { dotsList } from './constant';
 import { getReverseBy, resolveMouseEffect } from './utils';
@@ -15,7 +15,7 @@ import './wrapper.scss';
 const prefix = 'jigsaw-wrapper';
 
 const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
-    const { store, setStore } = useContext(Context);
+    const { store, setStore } = useContext(ctx);
     const { schema } = store;
     const { config, manifest } = schema[id];
     const { name } = manifest;
@@ -97,7 +97,6 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
     }
 
     if (name === 'Floor') {
-        const realDots = dotsList.filter(([row]) => row === 'center');
         return (
             <div
                 style={{
@@ -112,15 +111,13 @@ const Wrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
                     })}
                     onClick={handleClick}
                 >
-                    {isSelected &&
-                        realDots.map(([row, col], index) => (
-                            <Dots
-                                key={index}
-                                row={row}
-                                column={col}
-                                onMouseDown={(evt) => handleMouseDown(evt, row, col)}
-                            />
-                        ))}
+                    {isSelected && (
+                        <Dots
+                            row="center"
+                            column="bottom"
+                            onMouseDown={(evt) => handleMouseDown(evt, 'center', 'bottom')}
+                        />
+                    )}
                 </div>
                 <div
                     style={{

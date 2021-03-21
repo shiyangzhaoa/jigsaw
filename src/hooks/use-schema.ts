@@ -71,6 +71,8 @@ const useSchema = () => {
                 activityId: rootId,
                 schema: newSchema,
             });
+
+            return;
         }
 
         if (type === ActionEnum.REPLACE && isReplace(payload)) {
@@ -83,6 +85,8 @@ const useSchema = () => {
                 activityId: data.id,
                 schema: newSchema,
             });
+
+            return;
         }
 
         if (type === ActionEnum.INIT && isManifest(payload)) {
@@ -93,6 +97,8 @@ const useSchema = () => {
                 activityId: lastId,
                 schema: newSchema,
             });
+
+            return;
         }
     }
 

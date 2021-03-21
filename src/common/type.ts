@@ -12,6 +12,12 @@ export interface BaseConfig {
 
 export type Config = Record<string, any> & Partial<BaseConfig>;
 
+export interface DragInfo {
+    dragId: number;
+    hoverId: number;
+    activeIndex: number;
+}
+
 export interface Schema {
     id: string;
     props: Record<string, any>;
@@ -25,6 +31,7 @@ export interface ContainerStore {
     activityId?: string;
     configs: Record<string, any>[];
     schema: Record<string, Schema>;
+    dragInfo: DragInfo;
 }
 
 export interface ContainerContext {
@@ -42,4 +49,9 @@ export interface Manifest {
 export interface Coordinate {
     x: number;
     y: number;
+}
+
+export interface Action<T, M> {
+    type: T;
+    payload: M;
 }

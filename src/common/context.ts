@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ContainerContext } from './type';
+import { ContainerContext, DragInfo } from './type';
 import componentMap from '../components';
 import App from '../components/App';
 
@@ -21,6 +21,7 @@ export const defaultContext = {
                 manifest,
             },
         },
+        dragInfo: {} as DragInfo,
     },
 };
 

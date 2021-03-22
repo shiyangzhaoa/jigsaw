@@ -40,7 +40,7 @@ const Container = () => {
                 : null;
 
         return (
-            <Wrapper key={id} id={id} config={config}>
+            <Wrapper key={id} id={id}>
                 {createElement(component.view, props, getChildren)}
             </Wrapper>
         );

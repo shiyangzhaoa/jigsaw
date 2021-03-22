@@ -10,3 +10,5 @@ export const dotsList: [Row, Column][] = [
     ['right', 'center'],
     ['right', 'bottom'],
 ];
+
+export const prefix = 'jigsaw-wrapper';

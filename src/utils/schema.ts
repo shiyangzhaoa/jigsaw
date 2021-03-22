@@ -1,11 +1,9 @@
-import { Schema, ContainerStore, Manifest } from '../common/type';
+import { Schema, SchemeMap, ContainerStore, Manifest } from '../common/type';
 import { DirectionEnum } from '../common/constant';
 import floorManifest from '../floor/manifest';
 import { uuid, minYby, lastBy, createCpnSchema } from '.';
 
 export const clone = (schema: Schema) => ({ ...schema, id: uuid() });
-
-type SchemeMap = Record<string, Schema>;
 
 export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] => {
     function cloneDeep(schema: SchemeMap, id: string): Schema[] {

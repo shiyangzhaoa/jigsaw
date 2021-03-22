@@ -13,9 +13,11 @@ export interface BaseConfig {
 export type Config = Record<string, any> & Partial<BaseConfig>;
 
 export interface DragInfo {
-    dragId: number;
-    hoverId: number;
-    activeIndex: number;
+    dragId: string;
+    hoverId: string;
+    activeId: string;
+    deltaX: number;
+    deltaY: number;
 }
 
 export interface Schema {
@@ -27,11 +29,13 @@ export interface Schema {
     manifest: Manifest;
 }
 
+export type SchemeMap = Record<string, Schema>;
+
 export interface ContainerStore {
     activityId?: string;
     configs: Record<string, any>[];
-    schema: Record<string, Schema>;
-    dragInfo: DragInfo;
+    schema: SchemeMap;
+    dragInfo: Partial<DragInfo>;
 }
 
 export interface ContainerContext {

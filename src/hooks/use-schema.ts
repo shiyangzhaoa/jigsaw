@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { cloneDeepBy, deleteBy, addBy, initBy } from '../utils/schema';
+import { cloneDeepBy, deleteBy, addBy, initBy, replaceBy } from '../utils/schema';
 import { Schema, Manifest } from '../common/type';
 import ctx from '../common/context';
 
@@ -78,7 +78,7 @@ const useSchema = () => {
         if (type === ActionEnum.REPLACE && isReplace(payload)) {
             const { from, to, data } = payload;
 
-            const newSchema = addBy(deleteBy(schema, from), to, data);
+            const newSchema = replaceBy(schema, from, to);
 
             setStore({
                 ...store,

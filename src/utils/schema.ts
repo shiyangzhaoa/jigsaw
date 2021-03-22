@@ -112,18 +112,18 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
 // TODO: 实现有问题
 export const replaceBy = (schema: SchemeMap, from: string, to: string): SchemeMap => {
     const parent = schema[schema[from].parent];
-    const brother = parent?.childrenId;
+    const childrenId = parent?.childrenId;
     const cloneSchema = { ...schema };
 
-    const realSchema = addBy(schema, to, cloneSchema[from]);
-
-    delete realSchema[from];
+    const payload = { ...cloneSchema[from] };
+    delete cloneSchema[from];
+    const realSchema = addBy(schema, to, payload);
 
     return {
         ...realSchema,
         [parent.id]: {
             ...parent,
-            childrenId: brother?.filter((chId) => chId === from),
+            childrenId: childrenId?.filter((chId) => chId !== from),
         },
     };
 };

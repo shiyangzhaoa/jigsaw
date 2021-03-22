@@ -9,6 +9,7 @@ import ctx from '../common/context';
 import { WrapperProps } from './wrapper.types';
 import { dotsList, prefix } from './constant';
 import { getReverseBy, resolveMouseEffect } from './utils';
+import { replaceBy } from '../utils/schema';
 
 const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
     const { store, setStore } = useContext(ctx);
@@ -101,6 +102,10 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
         const rect = target.getBoundingClientRect();
         const deltaX = event.clientX - rect.x;
         const deltaY = event.clientY - rect.y;
+        locationRef.current = {
+            x: schema[id].config.x,
+            y: schema[id].config.y,
+        };
 
         const widgetEle = widgetRef.current;
         widgetEle.classList.add(`${prefix}--fixed`);
@@ -130,6 +135,7 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
 
         const handleWidgetMove = (event: MouseEvent) => {
             event.preventDefault();
+            const wrapperId = getWrapperIdBy(storeRef.current.schema, schema[id]);
 
             const wrapEle = document.querySelector(`#E${wrapperId}`);
             if (!wrapEle) {
@@ -144,7 +150,7 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
                 x: event.clientX - deltaX - x,
                 y: event.clientY - deltaY - y,
             };
-
+            console.log('locationRef', wrapEle, event.clientX - deltaX, event.clientY - deltaY);
             const ele = document.querySelector(`#E${id}`) as HTMLDivElement;
             Object.assign(ele.style, {
                 left: location.x + 'px',
@@ -153,19 +159,25 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
         };
 
         const handleWidgetUp = () => {
-            console.log('locationRef', locationRef);
             const location = locationRef.current;
             const widgetEle = widgetRef.current;
             widgetEle.classList.remove(`${prefix}--fixed`);
+            const { schema, dragInfo } = storeRef.current;
+            const { dragId, activeId } = dragInfo;
+            let realSchema = schema;
+            console.log(wrapperId, activeId);
+            if (wrapperId !== activeId) {
+                realSchema = replaceBy(schema, dragId, activeId);
+            }
             setStore({
                 ...storeRef.current,
                 dragInfo: {},
                 schema: {
-                    ...schema,
+                    ...realSchema,
                     [id]: {
-                        ...schema[id],
+                        ...realSchema[id],
                         config: {
-                            ...schema[id].config,
+                            ...realSchema[id].config,
                             x: location.x,
                             y: location.y,
                         },

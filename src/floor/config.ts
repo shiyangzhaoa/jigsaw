@@ -8,6 +8,7 @@ const config: Config = {
     height: 650,
     canDrag: false,
     canAddAsChild: true,
+    props: {},
 };
 
 export default config;

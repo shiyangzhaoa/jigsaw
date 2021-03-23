@@ -1,11 +1,13 @@
-import { Schema, ContainerStore, Manifest } from '../common/type';
+import { Schema, SchemeMap, ContainerStore, Manifest } from '../common/type';
 import { DirectionEnum } from '../common/constant';
 import floorManifest from '../floor/manifest';
 import { uuid, minYby, lastBy, createCpnSchema } from '.';
 
 export const clone = (schema: Schema) => ({ ...schema, id: uuid() });
 
-type SchemeMap = Record<string, Schema>;
+export const getRootChildren = (schema: SchemeMap) => {
+    return schema['App'].childrenId;
+};
 
 export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] => {
     function cloneDeep(schema: SchemeMap, id: string): Schema[] {
@@ -37,7 +39,6 @@ export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] 
     return [{ ...schema, ...result }, rootId];
 };
 
-// TODO: 实现有问题
 export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
     const parent = schema[schema[id].parent];
     const brother = parent?.childrenId;
@@ -59,7 +60,7 @@ export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
         ...cloneSchema,
         [parent.id]: {
             ...parent,
-            childrenId: brother?.filter((chId) => chId === id),
+            childrenId: brother?.filter((chId) => chId !== id),
         },
     };
 };
@@ -111,21 +112,20 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
     };
 };
 
-// TODO: 实现有问题
 export const replaceBy = (schema: SchemeMap, from: string, to: string): SchemeMap => {
     const parent = schema[schema[from].parent];
-    const brother = parent?.childrenId;
+    const childrenId = parent?.childrenId;
     const cloneSchema = { ...schema };
 
-    const realSchema = addBy(schema, to, cloneSchema[from]);
-
-    delete realSchema[from];
+    const payload = { ...cloneSchema[from] };
+    delete cloneSchema[from];
+    const realSchema = addBy(schema, to, payload);
 
     return {
         ...realSchema,
         [parent.id]: {
             ...parent,
-            childrenId: brother?.filter((chId) => chId === from),
+            childrenId: childrenId?.filter((chId) => chId !== from),
         },
     };
 };
@@ -185,4 +185,24 @@ export const addFloorBy = (store: ContainerStore, direction: 'TOP' | 'BOTTOM'): 
             [newFloor.id]: newFloor,
         },
     };
+};
+
+export const findLastActivityId = (schema: SchemeMap, payload: Schema) => {
+    const childrenId = schema[payload.parent].childrenId;
+
+    if (childrenId.length <= 1) {
+        return payload.parent;
+    }
+
+    const index = childrenId.indexOf(payload.id);
+
+    if (index === -1) {
+        return payload.parent;
+    }
+
+    if (index === 0) {
+        return childrenId[index + 1];
+    }
+
+    return childrenId[index - 1];
 };

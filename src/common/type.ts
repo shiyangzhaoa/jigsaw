@@ -10,7 +10,15 @@ export interface BaseConfig {
     canAddAsChild: boolean;
 }
 
-export type Config = Record<string, any> & Partial<BaseConfig>;
+export type Config<T = any> = Record<string, any> & Partial<BaseConfig> & { props?: T };
+
+export interface DragInfo {
+    dragId: string;
+    hoverId: string;
+    activeId: string;
+    deltaX: number;
+    deltaY: number;
+}
 
 export interface Schema {
     id: string;
@@ -21,10 +29,13 @@ export interface Schema {
     manifest: Manifest;
 }
 
+export type SchemeMap = Record<string, Schema>;
+
 export interface ContainerStore {
     activityId?: string;
     configs: Record<string, any>[];
-    schema: Record<string, Schema>;
+    schema: SchemeMap;
+    dragInfo: Partial<DragInfo>;
 }
 
 export interface ContainerContext {
@@ -42,4 +53,9 @@ export interface Manifest {
 export interface Coordinate {
     x: number;
     y: number;
+}
+
+export interface Action<T, M> {
+    type: T;
+    payload: M;
 }

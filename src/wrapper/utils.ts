@@ -81,3 +81,14 @@ export const resolveMouseEffect = (firstLoc: Coordinate, realLoc: Coordinate) =>
 
     return [newX, newY, w, h] as const;
 };
+
+export const getValidByRange = (num: number, min: number, max: number) => {
+    if (num < min) {
+        return min;
+    }
+    if (num > max) {
+        return max;
+    }
+
+    return num;
+};

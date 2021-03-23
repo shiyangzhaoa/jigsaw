@@ -1,6 +1,14 @@
 import { useContext } from 'react';
 
-import { cloneDeepBy, deleteBy, addBy, initBy } from '../utils/schema';
+import {
+    addBy,
+    initBy,
+    deleteBy,
+    replaceBy,
+    cloneDeepBy,
+    getRootChildren,
+    findLastActivityId,
+} from '../utils/schema';
 import { Schema, Manifest } from '../common/type';
 import ctx from '../common/context';
 
@@ -48,11 +56,15 @@ const useSchema = () => {
 
         if (type === ActionEnum.DELETE && isScheme(payload)) {
             const { id } = payload;
+            const lastActivityId = findLastActivityId(schema, payload);
             const newSchema = deleteBy(schema, id);
+
+            const rootChildren = getRootChildren(newSchema);
+            if (rootChildren.length === 0) return;
 
             setStore({
                 ...store,
-                activityId: payload.parent,
+                activityId: lastActivityId,
                 schema: newSchema,
             });
 
@@ -78,7 +90,7 @@ const useSchema = () => {
         if (type === ActionEnum.REPLACE && isReplace(payload)) {
             const { from, to, data } = payload;
 
-            const newSchema = addBy(deleteBy(schema, from), to, data);
+            const newSchema = replaceBy(schema, from, to);
 
             setStore({
                 ...store,

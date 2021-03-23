@@ -1,4 +1,4 @@
-import { Manifest, ContainerStore, Config, Schema } from '../common/type';
+import { Manifest, ContainerStore, Config, Schema, SchemeMap } from '../common/type';
 
 export const isNumber = (val: any): val is number => typeof val === 'number';
 
@@ -47,6 +47,16 @@ export const createCpnSchema = (store: ContainerStore, manifest: Manifest): Sche
     };
 };
 
+export const updateSchemaBy = (schema: SchemeMap, id: string, info: Partial<Schema>) => {
+    return {
+        ...schema,
+        [id]: {
+            ...schema[id],
+            ...info,
+        },
+    };
+};
+
 export const minYby = (configs: Config[]) => {
     let minY = 0;
 
@@ -68,4 +78,13 @@ export const windowToWrapper = (ele: HTMLElement, x: number, y: number) => {
         x: x - box.left,
         y: y - box.top,
     };
+};
+
+export const getWrapperIdBy = (schema: SchemeMap, item: Schema) => {
+    let id = schema[item.id].parent;
+    while (!schema[id].config.canAddAsChild) {
+        id = schema[id].parent;
+    }
+
+    return id;
 };

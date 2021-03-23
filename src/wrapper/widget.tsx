@@ -8,14 +8,13 @@ import { number2px, windowToWrapper, getWrapperIdBy } from '../utils';
 import ctx from '../common/context';
 import { WrapperProps } from './wrapper.types';
 import { dotsList, prefix } from './constant';
-import { getReverseBy, resolveMouseEffect } from './utils';
+import { getReverseBy, resolveMouseEffect, getValidByRange } from './utils';
 import { replaceBy } from '../utils/schema';
 
 const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) => {
     const { store, setStore } = useContext(ctx);
     const widgetRef = useRef<HTMLDivElement>(null);
     const storeRef = useRef<ContainerStore>(null);
-    const locationRef = useRef<Coordinate>(null);
     const { schema } = store;
     const { config } = schema[id];
 
@@ -102,10 +101,6 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
         const rect = target.getBoundingClientRect();
         const deltaX = event.clientX - rect.x;
         const deltaY = event.clientY - rect.y;
-        locationRef.current = {
-            x: schema[id].config.x,
-            y: schema[id].config.y,
-        };
 
         const widgetEle = widgetRef.current;
         widgetEle.classList.add(`${prefix}--fixed`);
@@ -135,22 +130,11 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
 
         const handleWidgetMove = (event: MouseEvent) => {
             event.preventDefault();
-            const wrapperId = getWrapperIdBy(storeRef.current.schema, schema[id]);
 
-            const wrapEle = document.querySelector(`#E${wrapperId}`);
-            if (!wrapEle) {
-                return;
-            }
-            const { x, y } = wrapEle.getBoundingClientRect();
             const location = {
                 x: event.clientX - deltaX,
                 y: event.clientY - deltaY,
             };
-            locationRef.current = {
-                x: event.clientX - deltaX - x,
-                y: event.clientY - deltaY - y,
-            };
-            console.log('locationRef', wrapEle, event.clientX - deltaX, event.clientY - deltaY);
             const ele = document.querySelector(`#E${id}`) as HTMLDivElement;
             Object.assign(ele.style, {
                 left: location.x + 'px',
@@ -158,17 +142,33 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
             });
         };
 
-        const handleWidgetUp = () => {
-            const location = locationRef.current;
+        const handleWidgetUp = (event: MouseEvent) => {
             const widgetEle = widgetRef.current;
             widgetEle.classList.remove(`${prefix}--fixed`);
             const { schema, dragInfo } = storeRef.current;
             const { dragId, activeId } = dragInfo;
             let realSchema = schema;
-            console.log(wrapperId, activeId);
+
             if (wrapperId !== activeId) {
                 realSchema = replaceBy(schema, dragId, activeId);
             }
+            const wrapEle = document.querySelector(`#E${activeId}`);
+            const { x, y, width, height } = wrapEle.getBoundingClientRect();
+            if (!wrapEle) {
+                return;
+            }
+            const realLocation = {
+                x: getValidByRange(
+                    event.clientX - deltaX - x,
+                    -config.width / 2,
+                    width - (config.width as number) / 2,
+                ),
+                y: getValidByRange(
+                    event.clientY - deltaY - y,
+                    -config.height / 2,
+                    height - config.height / 2,
+                ),
+            };
             setStore({
                 ...storeRef.current,
                 dragInfo: {},
@@ -178,8 +178,8 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
                         ...realSchema[id],
                         config: {
                             ...realSchema[id].config,
-                            x: location.x,
-                            y: location.y,
+                            x: realLocation.x,
+                            y: realLocation.y,
                         },
                     },
                 },
@@ -206,7 +206,7 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
         >
             <div
                 className={clsx(`${prefix}__control`, { [`${prefix}--selected`]: isSelected })}
-                onMouseDown={handleWidgetClick}
+                onMouseDown={canDrag ? handleWidgetClick : null}
             >
                 {isSelected &&
                     dotsList.map(([row, col], index) => (

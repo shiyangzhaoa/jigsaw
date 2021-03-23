@@ -5,6 +5,10 @@ import { uuid, minYby, lastBy, createCpnSchema } from '.';
 
 export const clone = (schema: Schema) => ({ ...schema, id: uuid() });
 
+export const getRootChildren = (schema: SchemeMap) => {
+    return schema['App'].childrenId;
+};
+
 export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] => {
     function cloneDeep(schema: SchemeMap, id: string): Schema[] {
         const target = schema[id];
@@ -35,7 +39,6 @@ export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] 
     return [{ ...schema, ...result }, rootId];
 };
 
-// TODO: 实现有问题
 export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
     const parent = schema[schema[id].parent];
     const brother = parent?.childrenId;
@@ -57,7 +60,7 @@ export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
         ...cloneSchema,
         [parent.id]: {
             ...parent,
-            childrenId: brother?.filter((chId) => chId === id),
+            childrenId: brother?.filter((chId) => chId !== id),
         },
     };
 };
@@ -109,7 +112,6 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
     };
 };
 
-// TODO: 实现有问题
 export const replaceBy = (schema: SchemeMap, from: string, to: string): SchemeMap => {
     const parent = schema[schema[from].parent];
     const childrenId = parent?.childrenId;
@@ -183,4 +185,24 @@ export const addFloorBy = (store: ContainerStore, direction: 'TOP' | 'BOTTOM'): 
             [newFloor.id]: newFloor,
         },
     };
+};
+
+export const findLastActivityId = (schema: SchemeMap, payload: Schema) => {
+    const childrenId = schema[payload.parent].childrenId;
+
+    if (childrenId.length <= 1) {
+        return payload.parent;
+    }
+
+    const index = childrenId.indexOf(payload.id);
+
+    if (index === -1) {
+        return payload.parent;
+    }
+
+    if (index === 0) {
+        return childrenId[index + 1];
+    }
+
+    return childrenId[index - 1];
 };

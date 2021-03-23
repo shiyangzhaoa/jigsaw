@@ -10,7 +10,7 @@ export interface BaseConfig {
     canAddAsChild: boolean;
 }
 
-export type Config = Record<string, any> & Partial<BaseConfig>;
+export type Config<T = any> = Record<string, any> & Partial<BaseConfig> & { props?: T };
 
 export interface DragInfo {
     dragId: string;

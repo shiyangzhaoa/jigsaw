@@ -96,6 +96,7 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
 
     const handleWidgetClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
+        event.stopPropagation();
 
         const target = event.target as HTMLDivElement;
         const rect = target.getBoundingClientRect();
@@ -130,6 +131,7 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
 
         const handleWidgetMove = (event: MouseEvent) => {
             event.preventDefault();
+            event.stopPropagation();
 
             const location = {
                 x: event.clientX - deltaX,

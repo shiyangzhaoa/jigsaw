@@ -50,8 +50,11 @@ const Container = () => {
         <div>
             <Context.Provider value={value}>
                 <div onClick={handleFloorAdd}>添加楼层</div>
-                <Widget manifest={{ name: 'Button', version: '0.0.1' }}>
+                <Widget manifest={{ name: 'Button', version: '1.0.0' }}>
                     <div>Button</div>
+                </Widget>
+                <Widget manifest={{ name: 'Card', version: '1.0.0' }}>
+                    <div>Card</div>
                 </Widget>
                 <div style={{ marginLeft: 100, position: 'relative', width: 375 }}>
                     {renderWrapper(store.schema.App)}

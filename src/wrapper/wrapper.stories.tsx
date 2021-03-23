@@ -31,7 +31,7 @@ const Container = () => {
     };
 
     const renderWrapper = (scheme: Schema) => {
-        const { childrenId, id, config, manifest, props } = scheme;
+        const { childrenId, id, manifest, props } = scheme;
         const component = componentMap[manifest.name];
 
         const getChildren =

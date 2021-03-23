@@ -1,10 +1,10 @@
-import React from "react";
-import tree from "./tree";
+import React from 'react';
+import Tree from '.';
 
 export default {
-    title: "tree"
+    title: 'tree',
 };
 
-export const WithBar = () => <tree foo="bar" />;
+export const WithBar = () => <Tree foo="bar" />;
 
-export const WithBaz = () => <tree foo="baz" />;
+export const WithBaz = () => <Tree foo="baz" />;

@@ -1,3 +1,3 @@
 export interface TreeProps {
-    foo: string;
+    id?: string;
 }

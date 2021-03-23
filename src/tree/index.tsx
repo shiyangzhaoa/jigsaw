@@ -1,13 +1,20 @@
 import React from 'react';
 
-import { TreeProps } from './tree.types';
+import useSchema from '../hooks/use-schema';
+import { getRoot } from '../utils/schema';
 
 import './tree.scss';
 
-const Tree = ({ foo }: TreeProps) => (
-    <div data-testid="tree" className="foo-bar">
-        {foo}
-    </div>
-);
+const Tree = () => {
+    const [store] = useSchema();
+    const { schema } = store;
+    const rootId = getRoot(schema);
+
+    return (
+        <div data-testid="tree" className="jigsaw-tree">
+            {rootId}
+        </div>
+    );
+};
 
 export default Tree;

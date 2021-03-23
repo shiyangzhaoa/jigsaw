@@ -206,3 +206,5 @@ export const findLastActivityId = (schema: SchemeMap, payload: Schema) => {
 
     return childrenId[index - 1];
 };
+
+export const getRoot = (schema: SchemeMap) => schema['App'].id;

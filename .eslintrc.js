@@ -1,7 +1,6 @@
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
-    plugins: ['react-hooks'],
     parserOptions: {
         ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
         sourceType: 'module', // Allows for the use of imports
@@ -18,6 +17,7 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:prettier/recommended',
+        'plugin:react-hooks/recommended',
     ],
     rules: {
         '@typescript-eslint/explicit-module-boundary-types': 0,

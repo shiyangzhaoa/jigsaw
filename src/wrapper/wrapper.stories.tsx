@@ -17,6 +17,7 @@ const Container = () => {
             activityId: lastId,
             schema: newSchema,
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const value = {

@@ -10,19 +10,18 @@ const App = ({ children }: PropsWithChildren<void>) => {
     const [store, dispatch] = useSchema();
     const { activityId, schema } = store;
 
-    const handleKeyPress = (event: KeyboardEvent) => {
-        if (event.code === keyCode.DELETE && activityId) {
-            dispatch(ActionEnum.DELETE, schema[activityId]);
-        }
-    };
-
     useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.code === keyCode.DELETE && activityId) {
+                dispatch(ActionEnum.DELETE, schema[activityId]);
+            }
+        };
         document.addEventListener('keydown', handleKeyPress);
 
         return () => {
             document.removeEventListener('keydown', handleKeyPress);
         };
-    }, [activityId]);
+    }, [activityId, dispatch, schema]);
 
     return <div className="jigsaw-app">{children}</div>;
 };

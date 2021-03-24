@@ -32,13 +32,11 @@ const Container = () => {
     };
 
     const renderWrapper = (scheme: Schema) => {
-        const { childrenId, id, manifest, props } = scheme;
+        const { children, id, manifest, props } = scheme;
         const component = componentMap[manifest.name];
 
         const getChildren =
-            childrenId.length !== 0
-                ? childrenId.map((id) => renderWrapper(store.schema[id]))
-                : null;
+            children.length !== 0 ? children.map((id) => renderWrapper(store.schema[id])) : null;
 
         return (
             <Wrapper key={id} id={id}>

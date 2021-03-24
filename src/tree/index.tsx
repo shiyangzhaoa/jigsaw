@@ -1,20 +1,22 @@
-import React from 'react';
+// import React from 'react';
 
-import useSchema from '../hooks/use-schema';
-import { getRoot } from '../utils/schema';
+// import useSchema from '../hooks/use-schema';
+// import { traverseDataNodes, onNodeExpand } from './utils';
 
-import './tree.scss';
+// import { treeDataDemo } from './demo';
 
-const Tree = () => {
-    const [store] = useSchema();
-    const { schema } = store;
-    const rootId = getRoot(schema);
+// import './tree.scss';
 
-    return (
-        <div data-testid="tree" className="jigsaw-tree">
-            {rootId}
-        </div>
-    );
-};
+// const Tree = () => {
+//     const [store] = useSchema();
+//     const { schema } = store;
+//     const treeData = traverseDataNodes(schema);
 
-export default Tree;
+//     return (
+//         <div data-testid="tree" className="jigsaw-tree">
+//             {treeData.map(data => {})}
+//         </div>
+//     );
+// };
+
+// export default Tree;

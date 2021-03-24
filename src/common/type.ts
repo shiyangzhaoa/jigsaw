@@ -24,17 +24,17 @@ export interface Schema {
     id: string;
     props: Record<string, any>;
     parent?: string;
-    childrenId: string[];
+    children: string[];
     config: Config;
     manifest: Manifest;
 }
 
-export type SchemeMap = Record<string, Schema>;
+export type SchemaMap = Record<string, Schema>;
 
 export interface ContainerStore {
     activityId?: string;
     configs: Record<string, any>[];
-    schema: SchemeMap;
+    schema: SchemaMap;
     dragInfo: Partial<DragInfo>;
 }
 

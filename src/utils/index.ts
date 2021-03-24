@@ -1,4 +1,4 @@
-import { Manifest, ContainerStore, Config, Schema, SchemeMap } from '../common/type';
+import { Manifest, ContainerStore, Config, Schema, SchemaMap } from '../common/type';
 
 export const isNumber = (val: any): val is number => typeof val === 'number';
 
@@ -43,11 +43,11 @@ export const createCpnSchema = (store: ContainerStore, manifest: Manifest): Sche
         config,
         props: config.props,
         id: uuid(),
-        childrenId: [],
+        children: [],
     };
 };
 
-export const updateSchemaBy = (schema: SchemeMap, id: string, info: Partial<Schema>) => {
+export const updateSchemaBy = (schema: SchemaMap, id: string, info: Partial<Schema>) => {
     return {
         ...schema,
         [id]: {
@@ -80,11 +80,28 @@ export const windowToWrapper = (ele: HTMLElement, x: number, y: number) => {
     };
 };
 
-export const getWrapperIdBy = (schema: SchemeMap, item: Schema) => {
+export const getWrapperIdBy = (schema: SchemaMap, item: Schema) => {
     let id = schema[item.id].parent;
     while (!schema[id].config.canAddAsChild) {
         id = schema[id].parent;
     }
 
     return id;
+};
+
+export const arrDel = (list: string[], value: string) => {
+    const clone = list.slice();
+    const index = clone.indexOf(value);
+    if (index >= 0) {
+        clone.splice(index, 1);
+    }
+    return clone;
+};
+
+export const arrAdd = (list: string[], value: string) => {
+    const clone = list.slice();
+    if (clone.indexOf(value) === -1) {
+        clone.push(value);
+    }
+    return clone;
 };

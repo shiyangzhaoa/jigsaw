@@ -16,7 +16,7 @@ export const defaultContext = {
             App: {
                 id: 'App',
                 props: {},
-                childrenId: [],
+                children: [],
                 config,
                 manifest,
             },

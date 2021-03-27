@@ -45,6 +45,7 @@
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@storybook/react": "^6.1.12",
+    "@svgr/rollup": "^5.5.0",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^11.2.3",
     "@types/jest": "^24.0.24",

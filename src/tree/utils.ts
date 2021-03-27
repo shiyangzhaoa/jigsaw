@@ -5,7 +5,7 @@ import { TreeData, TreeNode } from './tree.types';
 
 export const traverseDataNodes = (schema: SchemaMap) => {
     const result: TreeData = [];
-    const rootItem = { id: rootId, depth: 0, expanded: true, isEnd: [false], isStart: [true] };
+    const rootItem = { id: rootId, depth: 0, expanded: true, isEnd: [true], isStart: [true] };
 
     function processor(item: TreeNode = rootItem) {
         const cur = schema[item.id];
@@ -22,7 +22,7 @@ export const traverseDataNodes = (schema: SchemaMap) => {
                     depth: item.depth + 1,
                     parent: realItem,
                     isStart: [...(parent ? parent.isStart : []), index === 0],
-                    isEnd: [...(parent ? parent.isEnd : []), !!index && index === arr.length - 1],
+                    isEnd: [...(parent ? parent.isEnd : []), index === arr.length - 1],
                 });
             });
         }

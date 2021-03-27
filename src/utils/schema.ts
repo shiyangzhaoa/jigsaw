@@ -89,6 +89,7 @@ export const addBy = (schema: SchemaMap, id: string, payload: Schema): SchemaMap
             ...payload.config,
             x: 0,
             y: minY,
+            name: payload.manifest.cname,
         },
     };
 

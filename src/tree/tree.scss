@@ -1,2 +1,19 @@
-.foo-bar {
+.jigsaw-tree {
+    &-indent {
+        &-unit {
+            position: relative;
+            height: 100%;
+            display: inline-block;
+            width: 24px;
+
+            &::before {
+                position: absolute;
+                top: 0;
+                right: 12px;
+                bottom: -4px;
+                border-right: 1px solid #d9d9d9;
+                content: "";
+            }
+        }
+    }
 }

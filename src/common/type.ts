@@ -8,6 +8,7 @@ export interface BaseConfig {
     y: number;
     canDrag: boolean;
     canAddAsChild: boolean;
+    cname: string;
 }
 
 export type Config<T = any> = Record<string, any> & Partial<BaseConfig> & { props?: T };
@@ -45,6 +46,7 @@ export interface ContainerContext {
 
 export interface Manifest {
     name: string;
+    cname: string;
     version: string;
     icon?: string;
     preview?: string;

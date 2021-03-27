@@ -4,6 +4,7 @@ export const treeDataDemo: SchemaMap = {
     '63046433': {
         manifest: {
             name: 'Button',
+            cname: '按钮',
             version: '1.0.0',
         },
         config: {
@@ -28,6 +29,7 @@ export const treeDataDemo: SchemaMap = {
     '63047798': {
         manifest: {
             name: 'Card',
+            cname: '卡片',
             version: '1.0.0',
         },
         config: {
@@ -64,12 +66,14 @@ export const treeDataDemo: SchemaMap = {
         },
         manifest: {
             name: 'App',
+            cname: '拼图',
             version: '1.0.0',
         },
     },
     '63043c47': {
         manifest: {
             name: 'Floor',
+            cname: '楼',
             version: '1.0.0',
         },
         config: {
@@ -90,6 +94,7 @@ export const treeDataDemo: SchemaMap = {
     '6304551c': {
         manifest: {
             name: 'Floor',
+            cname: '楼',
             version: '1.0.0',
         },
         config: {
@@ -110,6 +115,7 @@ export const treeDataDemo: SchemaMap = {
     '63045cfa': {
         manifest: {
             name: 'Card',
+            cname: '楼',
             version: '1.0.0',
         },
         config: {
@@ -136,6 +142,7 @@ export const treeDataDemo: SchemaMap = {
     '6304bcf6': {
         manifest: {
             name: 'Button',
+            cname: '楼',
             version: '1.0.0',
         },
         config: {
@@ -160,6 +167,7 @@ export const treeDataDemo: SchemaMap = {
     '6304d5a6': {
         manifest: {
             name: 'Button',
+            cname: '按钮',
             version: '1.0.0',
         },
         config: {
@@ -184,6 +192,7 @@ export const treeDataDemo: SchemaMap = {
     '6304d7f6': {
         manifest: {
             name: 'Button',
+            cname: '按钮',
             version: '1.0.0',
         },
         config: {
@@ -208,6 +217,7 @@ export const treeDataDemo: SchemaMap = {
     '6304d8ac': {
         manifest: {
             name: 'Button',
+            cname: '按钮',
             version: '1.0.0',
         },
         config: {

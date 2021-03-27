@@ -5,7 +5,7 @@ import { TreeData, TreeNode } from './tree.types';
 
 export const traverseDataNodes = (schema: SchemaMap) => {
     const result: TreeData = [];
-    const rootItem = { id: rootId, depth: 0, expanded: true, isEnd: false, isStart: true };
+    const rootItem = { id: rootId, depth: 0, expanded: true, isEnd: [false], isStart: [true] };
 
     function processor(item: TreeNode = rootItem) {
         const cur = schema[item.id];
@@ -14,14 +14,15 @@ export const traverseDataNodes = (schema: SchemaMap) => {
         result.push(realItem);
 
         if (cur.children.length !== 0) {
+            const parent = realItem;
             cur.children.forEach((child, index, arr) => {
                 processor({
                     id: child,
                     key: item.id,
                     depth: item.depth + 1,
                     parent: realItem,
-                    isStart: index === 0,
-                    isEnd: index === arr.length - 1,
+                    isStart: [...(parent ? parent.isStart : []), index === 0],
+                    isEnd: [...(parent ? parent.isEnd : []), !!index && index === arr.length - 1],
                 });
             });
         }
@@ -36,6 +37,7 @@ export const traverseDataNodes = (schema: SchemaMap) => {
 //     const flattenList: FlattenNode[] = [];
 
 //     function dig(list: TreeData, parent: FlattenNode = null) {
+//         let last = null;
 //         list.forEach((treeNode) => {
 //             const flattenNode: FlattenNode = {
 //                 ...treeNode,
@@ -45,6 +47,7 @@ export const traverseDataNodes = (schema: SchemaMap) => {
 //             };
 
 //             flattenList.push(flattenNode);
+//             last = flattenNode;
 
 //             return flattenList;
 //         });

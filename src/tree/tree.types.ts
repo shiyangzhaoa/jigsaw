@@ -6,19 +6,19 @@ export interface TreeNode {
     depth: number;
     expanded?: boolean;
     parent?: TreeNode;
-    isStart: boolean;
-    isEnd: boolean;
+    isStart: boolean[];
+    isEnd: boolean[];
 }
 
-export interface FlattenNode {
-    id: string;
-    key?: string;
-    depth: number;
-    expanded?: boolean;
-    parent?: FlattenNode;
-    isStart?: boolean[];
-    isEnd?: boolean[];
-}
+// export interface FlattenNode {
+//     id: string;
+//     key?: string;
+//     depth: number;
+//     expanded?: boolean;
+//     parent?: FlattenNode;
+//     isStart?: boolean[];
+//     isEnd?: boolean[];
+// }
 
 export type TreeData = TreeNode[];
 

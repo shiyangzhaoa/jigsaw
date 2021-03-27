@@ -7,12 +7,13 @@ import Context, { defaultContext } from '../common/context';
 
 const manifest = {
     name: 'test',
+    cname: '测试',
     version: '0.0.1',
     icon: '',
     preview: '',
 };
 
-const Container = () => {
+const TreeCpn = () => {
     const [store, setStore] = useState<ContainerStore>(defaultContext.store);
     useEffect(() => {
         const config = {
@@ -46,7 +47,7 @@ const Container = () => {
 };
 
 export default {
-    title: 'Widget',
+    title: 'Tree',
 };
 
-export const WidgetDemo = () => <Container />;
+export const TreeDemo = () => <TreeCpn />;

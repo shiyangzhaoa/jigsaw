@@ -1,24 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
+
+import { prefix } from './constant';
+import { TreeNodeProps } from './tree.types';
 
 import closeIcon from '../../assets/icons/switch-close.svg';
 import openIcon from '../../assets/icons/switch-open.svg';
 import widget from '../../assets/icons/tree-widget.svg';
-import { prefix } from './constant';
-import { TreeNodeProps } from './tree.types';
 
 const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => {
+    const [dragNodeHighlight, setDragNodeHighlight] = useState(false);
     const { id, depth, isStart, isEnd, schema, expanded, isLeaf } = item;
     const list: React.ReactElement[] = [];
     const { config } = schema;
     const baseClassName = `${prefix}-indent-unit`;
 
+    const disabled = id === 'App';
+
     const handleExpand = () => {
-        onExpand({ expanded, id });
+        onExpand(id);
     };
 
     const handleNodeClick = () => {
         onClick(id);
+    };
+
+    const handleDragStart = () => {
+        setDragNodeHighlight(true);
+    };
+
+    const handleDragEnter = () => {
+        // TODO: todo
+    };
+
+    const handleDragEnd = () => {
+        setDragNodeHighlight(false);
     };
 
     for (let i = 0; i < depth; i++) {
@@ -55,17 +71,22 @@ const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => 
     };
 
     return (
-        <div className={`${prefix}-treenode`}>
+        <div
+            className={`${prefix}-treenode`}
+            onDragEnter={disabled ? undefined : handleDragEnter}
+            onDragEnd={disabled ? undefined : handleDragEnd}
+        >
             <span aria-hidden="true" className={`${prefix}-indent`}>
                 {list}
             </span>
             {renderSwitcher()}
             <span
                 className={clsx(`${prefix}-wrapper`, {
-                    [`${prefix}-wrapper--selected`]: id === activityId,
+                    [`${prefix}-wrapper--selected`]: id === activityId || dragNodeHighlight,
                 })}
                 onClick={handleNodeClick}
-                draggable
+                onDragStart={disabled ? undefined : handleDragStart}
+                draggable={!disabled}
             >
                 {config.name}
             </span>

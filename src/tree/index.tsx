@@ -28,7 +28,7 @@ const Tree = () => {
         );
     }, [schema, expandedKeys]);
 
-    const onExpand = ({ id }) => {
+    const onExpand = (id) => {
         if (expandedKeys.includes(id)) {
             const realKeys = expandedKeys.filter((item) => item !== id);
             setExpandedKeys(realKeys);

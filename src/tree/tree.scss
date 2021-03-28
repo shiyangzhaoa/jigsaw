@@ -9,6 +9,7 @@
     &-switcher {
         width: 24px;
         transition: transform 0.3s ease-in;
+        user-select: none;
 
         &:hover {
             cursor: pointer;

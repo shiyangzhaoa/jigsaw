@@ -216,24 +216,25 @@ export const treeDataDemo: SchemaMap = {
     },
     '6304d8ac': {
         manifest: {
-            name: 'Button',
-            cname: '按钮',
+            name: 'Card',
+            cname: '卡片',
             version: '1.0.0',
         },
         config: {
-            name: 'Button',
-            width: 100,
-            height: 30,
+            name: 'Card',
+            width: 316,
+            height: 350,
             canDrag: true,
-            canAddAsChild: false,
+            canAddAsChild: true,
             props: {
-                btnText: '按钮',
+                title: '卡片',
             },
             x: 0,
             y: 60,
         },
         props: {
-            btnText: '按钮',
+            bordered: false,
+            title: '卡片',
         },
         id: '6304d8ac',
         children: [],

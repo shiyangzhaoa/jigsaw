@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import useSchema from '../hooks/use-schema';
-import { traverseDataNodes, onNodeExpand } from './utils';
+import { traverseDataNodes } from './utils';
 import { TreeData } from './tree.types';
 import TreeNode from './tree-node';
 
@@ -16,34 +16,25 @@ const Tree = () => {
 
     useEffect(() => {
         const data = traverseDataNodes(schema);
-        dataRef.current = data;
-        setTreeData(data);
-    }, [schema]);
+        dataRef.current = data.map((item) => ({
+            ...item,
+            expanded: !expandedKeys.includes(item.id),
+        }));
 
-    const onExpand = ({ expanded, id }) => {
+        setTreeData(
+            dataRef.current.filter(
+                (item) => !expandedKeys.some((key) => item.validKey.includes(key)),
+            ),
+        );
+    }, [schema, expandedKeys]);
+
+    const onExpand = ({ id }) => {
         if (expandedKeys.includes(id)) {
             const realKeys = expandedKeys.filter((item) => item !== id);
             setExpandedKeys(realKeys);
-            dataRef.current = dataRef.current.map((item) =>
-                item.id === id ? { ...item, expanded: !expanded } : item,
-            );
-            setTreeData(
-                dataRef.current.filter(
-                    (item) => !realKeys.some((key) => item.validKey.includes(key)),
-                ),
-            );
         } else {
             const realKeys = [...expandedKeys, id];
             setExpandedKeys(realKeys);
-            dataRef.current = dataRef.current.map((item) =>
-                item.id === id ? { ...item, expanded: !item.expanded } : item,
-            );
-
-            setTreeData(
-                dataRef.current.filter(
-                    (item) => !realKeys.some((key) => item.validKey.includes(key)),
-                ),
-            );
         }
     };
 

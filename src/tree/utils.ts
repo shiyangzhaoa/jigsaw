@@ -40,31 +40,6 @@ export const traverseDataNodes = (schema: SchemaMap) => {
     return result;
 };
 
-// export const flattenTreeData = (treeData: TreeData): FlattenNode[] => {
-//     const flattenList: FlattenNode[] = [];
-
-//     function dig(list: TreeData, parent: FlattenNode = null) {
-//         let last = null;
-//         list.forEach((treeNode) => {
-//             const flattenNode: FlattenNode = {
-//                 ...treeNode,
-//                 parent,
-//                 isStart: [...(last ? last.isStart : []), treeNode.parent.isStart || true],
-//                 isEnd: [...(last ? last.isEnd : []), treeNode.parent.isEnd || false],
-//             };
-
-//             flattenList.push(flattenNode);
-//             last = flattenNode;
-
-//             return flattenList;
-//         });
-//     }
-
-//     dig(treeData);
-
-//     return flattenList;
-// };
-
 export const onNodeExpand = (keys: string[], treeNode: TreeNode) => {
     const { expanded, id } = treeNode;
     const targetExpanded = !expanded;

@@ -1,23 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import useSchema from '../hooks/use-schema';
 import { traverseDataNodes, onNodeExpand } from './utils';
+import { TreeData } from './tree.types';
 import TreeNode from './tree-node';
-
-import { treeDataDemo } from './demo';
 
 import './tree.scss';
 
 const Tree = () => {
     const [store] = useSchema();
+    const [expandedKeys, setExpandedKeys] = useState([]);
+    const [treeData, setTreeData] = useState([]);
+    const dataRef = useRef<TreeData>([]);
     const { schema } = store;
-    const treeData = traverseDataNodes(treeDataDemo);
-    console.log('treeData', treeData);
+
+    useEffect(() => {
+        const data = traverseDataNodes(schema);
+        dataRef.current = data;
+        setTreeData(data);
+    }, [schema]);
+
+    const onExpand = ({ expanded, id }) => {
+        if (expandedKeys.includes(id)) {
+            const realKeys = expandedKeys.filter((item) => item !== id);
+            setExpandedKeys(realKeys);
+            dataRef.current = dataRef.current.map((item) =>
+                item.id === id ? { ...item, expanded: !expanded } : item,
+            );
+            setTreeData(
+                dataRef.current.filter(
+                    (item) => !realKeys.some((key) => item.validKey.includes(key)),
+                ),
+            );
+        } else {
+            const realKeys = [...expandedKeys, id];
+            setExpandedKeys(realKeys);
+            dataRef.current = dataRef.current.map((item) =>
+                item.id === id ? { ...item, expanded: !item.expanded } : item,
+            );
+
+            setTreeData(
+                dataRef.current.filter(
+                    (item) => !realKeys.some((key) => item.validKey.includes(key)),
+                ),
+            );
+        }
+    };
 
     return (
         <div data-testid="tree" className="jigsaw-tree">
             {treeData.map((data) => (
-                <TreeNode schema={treeDataDemo[data.id]} {...data} key={data.id} />
+                <TreeNode schema={schema[data.id]} {...data} key={data.id} onExpand={onExpand} />
             ))}
         </div>
     );

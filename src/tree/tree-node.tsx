@@ -2,14 +2,20 @@ import React from 'react';
 import clsx from 'clsx';
 
 import closeIcon from '../../assets/icons/switch-close.svg';
-import openIcon from '../../assets/icons/switch-close.svg';
+import openIcon from '../../assets/icons/switch-open.svg';
+import widget from '../../assets/icons/tree-widget.svg';
 import { prefix } from './constant';
 import { TreeNodeProps } from './tree.types';
 
-const TreeNode = ({ id, depth, isStart, isEnd, schema, expanded }: TreeNodeProps) => {
+const TreeNode = (item: TreeNodeProps) => {
+    const { id, depth, isStart, isEnd, schema, expanded, isLeaf, onExpand } = item;
     const list: React.ReactElement[] = [];
     const { config } = schema;
     const baseClassName = `${prefix}-indent-unit`;
+
+    const handleExpand = () => {
+        onExpand({ expanded, id });
+    };
 
     for (let i = 0; i < depth; i++) {
         list.push(
@@ -23,12 +29,33 @@ const TreeNode = ({ id, depth, isStart, isEnd, schema, expanded }: TreeNodeProps
         );
     }
 
+    const renderSwitcher = () => {
+        if (isLeaf) {
+            return (
+                <img
+                    className={clsx(`${prefix}-switcher`, `${prefix}-switcher-noop`)}
+                    src={widget}
+                    alt=""
+                />
+            );
+        }
+
+        return (
+            <img
+                className={`${prefix}-switcher`}
+                src={expanded ? openIcon : closeIcon}
+                alt=""
+                onClick={handleExpand}
+            />
+        );
+    };
+
     return (
         <div className={`${prefix}-treenode`}>
             <span aria-hidden="true" className={`${prefix}-indent`}>
                 {list}
             </span>
-            <img className={`${prefix}-switcher`} src={expanded ? openIcon : closeIcon} alt="" />
+            {renderSwitcher()}
             <span className={`${prefix}-wrapper`}>{config.name}</span>
         </div>
     );

@@ -2,10 +2,11 @@ import { Schema } from '../common/type';
 
 export interface TreeNode {
     id: string;
-    key?: string;
+    validKey?: string[];
     depth: number;
     expanded?: boolean;
     parent?: TreeNode;
+    isLeaf?: boolean;
     isStart: boolean[];
     isEnd: boolean[];
 }
@@ -26,4 +27,7 @@ export interface TreeProps {
     id?: string;
 }
 
-export type TreeNodeProps = TreeNode & { schema: Schema };
+export type TreeNodeProps = TreeNode & {
+    schema: Schema;
+    onExpand: (val: Partial<TreeNode>) => void;
+};

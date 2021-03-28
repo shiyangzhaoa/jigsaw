@@ -5,12 +5,19 @@ import { TreeData, TreeNode } from './tree.types';
 
 export const traverseDataNodes = (schema: SchemaMap) => {
     const result: TreeData = [];
-    const rootItem = { id: rootId, depth: 0, expanded: true, isEnd: [true], isStart: [true] };
+    const rootItem = {
+        id: rootId,
+        depth: 0,
+        expanded: true,
+        isEnd: [true],
+        isStart: [true],
+        validKey: [],
+    };
 
     function processor(item: TreeNode = rootItem) {
         const cur = schema[item.id];
-
-        const realItem = { ...item, expanded: cur.config.canAddAsChild ? true : undefined };
+        const expandable = cur.children.length !== 0;
+        const realItem = { ...item, expanded: expandable ? true : undefined, isLeaf: !expandable };
         result.push(realItem);
 
         if (cur.children.length !== 0) {
@@ -18,7 +25,7 @@ export const traverseDataNodes = (schema: SchemaMap) => {
             cur.children.forEach((child, index, arr) => {
                 processor({
                     id: child,
-                    key: item.id,
+                    validKey: [...parent.validKey, item.id],
                     depth: item.depth + 1,
                     parent: realItem,
                     isStart: [...(parent ? parent.isStart : []), index === 0],

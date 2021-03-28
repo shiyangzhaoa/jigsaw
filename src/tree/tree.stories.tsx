@@ -4,6 +4,7 @@ import Widget from '../widget';
 import Tree from '.';
 import { ContainerStore } from '../common/type';
 import Context, { defaultContext } from '../common/context';
+import { treeDataDemo } from './demo';
 
 const manifest = {
     name: 'test',
@@ -14,7 +15,10 @@ const manifest = {
 };
 
 const TreeCpn = () => {
-    const [store, setStore] = useState<ContainerStore>(defaultContext.store);
+    const [store, setStore] = useState<ContainerStore>({
+        ...defaultContext.store,
+        schema: treeDataDemo,
+    });
     useEffect(() => {
         const config = {
             name: 'test',

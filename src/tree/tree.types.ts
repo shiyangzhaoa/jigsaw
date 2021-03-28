@@ -29,5 +29,7 @@ export interface TreeProps {
 
 export type TreeNodeProps = TreeNode & {
     schema: Schema;
+    activityId: string;
     onExpand: (val: Partial<TreeNode>) => void;
+    onClick: (id: string) => void;
 };

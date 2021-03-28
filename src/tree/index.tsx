@@ -8,11 +8,11 @@ import TreeNode from './tree-node';
 import './tree.scss';
 
 const Tree = () => {
-    const [store] = useSchema();
+    const [store, , setStore] = useSchema();
     const [expandedKeys, setExpandedKeys] = useState([]);
     const [treeData, setTreeData] = useState([]);
     const dataRef = useRef<TreeData>([]);
-    const { schema } = store;
+    const { schema, activityId } = store;
 
     useEffect(() => {
         const data = traverseDataNodes(schema);
@@ -47,10 +47,21 @@ const Tree = () => {
         }
     };
 
+    const onClick = (id: string) => {
+        setStore({ ...store, activityId: id });
+    };
+
     return (
         <div data-testid="tree" className="jigsaw-tree">
             {treeData.map((data) => (
-                <TreeNode schema={schema[data.id]} {...data} key={data.id} onExpand={onExpand} />
+                <TreeNode
+                    schema={schema[data.id]}
+                    {...data}
+                    key={data.id}
+                    activityId={activityId}
+                    onExpand={onExpand}
+                    onClick={onClick}
+                />
             ))}
         </div>
     );

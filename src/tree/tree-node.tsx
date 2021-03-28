@@ -7,14 +7,18 @@ import widget from '../../assets/icons/tree-widget.svg';
 import { prefix } from './constant';
 import { TreeNodeProps } from './tree.types';
 
-const TreeNode = (item: TreeNodeProps) => {
-    const { id, depth, isStart, isEnd, schema, expanded, isLeaf, onExpand } = item;
+const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => {
+    const { id, depth, isStart, isEnd, schema, expanded, isLeaf } = item;
     const list: React.ReactElement[] = [];
     const { config } = schema;
     const baseClassName = `${prefix}-indent-unit`;
 
     const handleExpand = () => {
         onExpand({ expanded, id });
+    };
+
+    const handleNodeClick = () => {
+        onClick(id);
     };
 
     for (let i = 0; i < depth; i++) {
@@ -56,7 +60,15 @@ const TreeNode = (item: TreeNodeProps) => {
                 {list}
             </span>
             {renderSwitcher()}
-            <span className={`${prefix}-wrapper`}>{config.name}</span>
+            <span
+                className={clsx(`${prefix}-wrapper`, {
+                    [`${prefix}-wrapper--selected`]: id === activityId,
+                })}
+                onClick={handleNodeClick}
+                draggable
+            >
+                {config.name}
+            </span>
         </div>
     );
 };

@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { prefix } from './constant';
 import { TreeNodeProps } from './tree.types';
 
-import closeIcon from '../../assets/icons/switch-close.svg';
-import openIcon from '../../assets/icons/switch-open.svg';
-import widget from '../../assets/icons/tree-widget.svg';
+import StatusIcon from '../../assets/icons/switch-open.svg';
+import Widget from '../../assets/icons/tree-widget.svg';
 
 const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => {
     const [dragNodeHighlight, setDragNodeHighlight] = useState(false);
@@ -52,21 +51,18 @@ const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => 
     const renderSwitcher = () => {
         if (isLeaf) {
             return (
-                <img
-                    className={clsx(`${prefix}-switcher`, `${prefix}-switcher-noop`)}
-                    src={widget}
-                    alt=""
-                />
+                <span className={clsx(`${prefix}-switcher`, `${prefix}-switcher-noop`)}>
+                    <Widget />
+                </span>
             );
         }
 
         return (
-            <img
-                className={`${prefix}-switcher`}
-                src={expanded ? openIcon : closeIcon}
-                alt=""
-                onClick={handleExpand}
-            />
+            <span className={`${prefix}-switcher`} onClick={handleExpand}>
+                <StatusIcon
+                    className={expanded ? `${prefix}-switcher-open` : `${prefix}-switcher-close`}
+                />
+            </span>
         );
     };
 

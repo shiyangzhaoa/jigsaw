@@ -8,6 +8,7 @@
 
     &-switcher {
         width: 24px;
+        height: 24px;
         transition: transform 0.3s ease-in;
         user-select: none;
 
@@ -21,6 +22,14 @@
                 cursor: unset;
                 transform: unset;
             } 
+        }
+
+        &-open {
+            transform: rotate(0);
+        }
+
+        &-close {
+            transform: rotate(-90deg);
         }
     }
 
@@ -77,5 +86,11 @@
                 }
             }
         }
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+        transition: transform .3s;
     }
 }

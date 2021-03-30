@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { prefix } from './constant';
@@ -7,9 +7,19 @@ import { TreeNodeProps } from './tree.types';
 import StatusIcon from '../../assets/icons/switch-open.svg';
 import Widget from '../../assets/icons/tree-widget.svg';
 
-const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => {
+const TreeNode = ({
+    schema,
+    activityId,
+    onExpand,
+    onClick,
+    onNodeDragStart,
+    onNodeDragEnter,
+    onNodeDragOver,
+    ...node
+}: TreeNodeProps) => {
     const [dragNodeHighlight, setDragNodeHighlight] = useState(false);
-    const { id, depth, isStart, isEnd, schema, expanded, isLeaf } = item;
+    const nodeRef = useRef<HTMLDivElement>(null);
+    const { id, depth, isStart, isEnd, expanded, isLeaf } = node;
     const list: React.ReactElement[] = [];
     const { config } = schema;
     const baseClassName = `${prefix}-indent-unit`;
@@ -24,16 +34,31 @@ const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => 
         onClick(id);
     };
 
-    const handleDragStart = () => {
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
         setDragNodeHighlight(true);
+
+        onNodeDragStart(e, node, nodeRef.current);
     };
 
-    const handleDragEnter = () => {
-        // TODO: todo
+    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        onNodeDragEnter(e, node, nodeRef.current);
     };
 
-    const handleDragEnd = () => {
+    const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         setDragNodeHighlight(false);
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        onNodeDragOver(e, node, nodeRef.current);
     };
 
     for (let i = 0; i < depth; i++) {
@@ -69,8 +94,9 @@ const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => 
     return (
         <div
             className={`${prefix}-treenode`}
-            onDragEnter={disabled ? undefined : handleDragEnter}
-            onDragEnd={disabled ? undefined : handleDragEnd}
+            onDragEnter={handleDragEnter}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
         >
             <span aria-hidden="true" className={`${prefix}-indent`}>
                 {list}
@@ -80,6 +106,7 @@ const TreeNode = ({ activityId, onExpand, onClick, ...item }: TreeNodeProps) => 
                 className={clsx(`${prefix}-wrapper`, {
                     [`${prefix}-wrapper--selected`]: id === activityId || dragNodeHighlight,
                 })}
+                ref={nodeRef}
                 onClick={handleNodeClick}
                 onDragStart={disabled ? undefined : handleDragStart}
                 draggable={!disabled}

@@ -52,7 +52,7 @@ export interface Manifest {
     preview?: string;
 }
 
-export interface Coordinate {
+export interface Position {
     x: number;
     y: number;
 }

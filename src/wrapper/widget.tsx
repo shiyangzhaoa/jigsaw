@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import Dots from '../dots';
 
-import { Row, Column, Coordinate, ContainerStore } from '../common/type';
+import { Row, Column, Position, ContainerStore } from '../common/type';
 import { number2px, windowToWrapper, getWrapperIdBy } from '../utils';
 import ctx from '../common/context';
 import { WrapperProps } from './wrapper.types';
@@ -25,28 +25,24 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
         storeRef.current = store;
     }, [store]);
 
-    const handleDotsMouseDown = (
-        event: React.MouseEvent<HTMLDivElement>,
-        row: Row,
-        col: Column,
-    ) => {
-        event.preventDefault();
-        event.stopPropagation();
+    const handleDotsMouseDown = (e: React.MouseEvent<HTMLDivElement>, row: Row, col: Column) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-        const t1 = windowToWrapper(document.body, event.clientX, event.clientY);
+        const t1 = windowToWrapper(document.body, e.clientX, e.clientY);
         const [m, n] = getReverseBy(config, row, col);
 
-        const handleMove = (event: MouseEvent) => {
-            event.preventDefault();
-            event.stopPropagation();
+        const handleMove = (e: MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-            const t2 = windowToWrapper(document.body, event.clientX, event.clientY);
+            const t2 = windowToWrapper(document.body, e.clientX, e.clientY);
             const distance = {
                 x: t2.x - t1.x,
                 y: t2.y - t1.y,
             };
 
-            let realLoc: Coordinate;
+            let realLoc: Position;
 
             if (row === 'center') {
                 realLoc = {
@@ -94,14 +90,14 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
         document.addEventListener('mouseup', handleMouseUp);
     };
 
-    const handleWidgetClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        event.preventDefault();
-        event.stopPropagation();
+    const handleWidgetClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-        const target = event.target as HTMLDivElement;
+        const target = e.target as HTMLDivElement;
         const rect = target.getBoundingClientRect();
-        const deltaX = event.clientX - rect.x;
-        const deltaY = event.clientY - rect.y;
+        const deltaX = e.clientX - rect.x;
+        const deltaY = e.clientY - rect.y;
 
         const widgetEle = widgetRef.current;
         widgetEle.classList.add(`${prefix}--fixed`);
@@ -129,13 +125,13 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
             },
         });
 
-        const handleWidgetMove = (event: MouseEvent) => {
-            event.preventDefault();
-            event.stopPropagation();
+        const handleWidgetMove = (e: MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
 
             const location = {
-                x: event.clientX - deltaX,
-                y: event.clientY - deltaY,
+                x: e.clientX - deltaX,
+                y: e.clientY - deltaY,
             };
             const ele = document.querySelector(`#E${id}`) as HTMLDivElement;
             Object.assign(ele.style, {
@@ -144,7 +140,7 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
             });
         };
 
-        const handleWidgetUp = (event: MouseEvent) => {
+        const handleWidgetUp = (e: MouseEvent) => {
             const widgetEle = widgetRef.current;
             widgetEle.classList.remove(`${prefix}--fixed`);
             const { schema, dragInfo } = storeRef.current;
@@ -161,12 +157,12 @@ const WidgetWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) 
             }
             const realLocation = {
                 x: getValidByRange(
-                    event.clientX - deltaX - x,
+                    e.clientX - deltaX - x,
                     -config.width / 2,
                     width - (config.width as number) / 2,
                 ),
                 y: getValidByRange(
-                    event.clientY - deltaY - y,
+                    e.clientY - deltaY - y,
                     -config.height / 2,
                     height - config.height / 2,
                 ),

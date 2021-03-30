@@ -11,16 +11,6 @@ export interface TreeNode {
     isEnd: boolean[];
 }
 
-// export interface FlattenNode {
-//     id: string;
-//     key?: string;
-//     depth: number;
-//     expanded?: boolean;
-//     parent?: FlattenNode;
-//     isStart?: boolean[];
-//     isEnd?: boolean[];
-// }
-
 export type TreeData = TreeNode[];
 
 export interface TreeProps {
@@ -32,4 +22,19 @@ export type TreeNodeProps = TreeNode & {
     activityId: string;
     onExpand: (id: string) => void;
     onClick: (id: string) => void;
+    onNodeDragStart: (
+        e: React.DragEvent<HTMLDivElement>,
+        val: TreeNode,
+        ref: HTMLDivElement,
+    ) => void;
+    onNodeDragEnter: (
+        e: React.DragEvent<HTMLDivElement>,
+        val: TreeNode,
+        ref: HTMLDivElement,
+    ) => void;
+    onNodeDragOver: (
+        e: React.DragEvent<HTMLDivElement>,
+        val: TreeNode,
+        ref: HTMLDivElement,
+    ) => void;
 };

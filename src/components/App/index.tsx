@@ -11,8 +11,8 @@ const App = ({ children }: PropsWithChildren<void>) => {
     const { activityId, schema } = store;
 
     useEffect(() => {
-        const handleKeyPress = (event: KeyboardEvent) => {
-            if (event.code === keyCode.DELETE && activityId) {
+        const handleKeyPress = (e: KeyboardEvent) => {
+            if (e.code === keyCode.DELETE && activityId) {
                 dispatch(ActionEnum.DELETE, schema[activityId]);
             }
         };

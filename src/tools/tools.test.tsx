@@ -1,27 +1,27 @@
 // Generated with script/create-component.js
-import React from "react";
-import { render } from "@testing-library/react";
+import React from 'react';
+import { render } from '@testing-library/react';
 
-import tools from "./tools";
-import { toolsProps } from "./tools.types";
+import Tools from '.';
+import { toolsProps } from './tools.types';
 
-describe("Test Component", () => {
-  let props: toolsProps;
+describe('Test Component', () => {
+    let props: toolsProps;
 
-  beforeEach(() => {
-    props = {
-      foo: "bar"
-    };
-  });
+    beforeEach(() => {
+        props = {
+            foo: 'bar',
+        };
+    });
 
-  const renderComponent = () => render(<tools {...props} />);
+    const renderComponent = () => render(<Tools {...props} />);
 
-  it("should render foo text correctly", () => {
-    props.foo = "harvey was here";
-    const { getByTestId } = renderComponent();
+    it('should render foo text correctly', () => {
+        props.foo = 'harvey was here';
+        const { getByTestId } = renderComponent();
 
-    const component = getByTestId("tools");
+        const component = getByTestId('tools');
 
-    expect(component).toHaveTextContent("harvey was here");
-  });
+        expect(component).toHaveTextContent('harvey was here');
+    });
 });

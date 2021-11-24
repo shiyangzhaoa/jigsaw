@@ -17,6 +17,7 @@ const Container = () => {
             activityId: lastId,
             schema: newSchema,
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const value = {
@@ -31,13 +32,11 @@ const Container = () => {
     };
 
     const renderWrapper = (scheme: Schema) => {
-        const { childrenId, id, config, manifest, props } = scheme;
+        const { children, id, manifest, props } = scheme;
         const component = componentMap[manifest.name];
 
         const getChildren =
-            childrenId.length !== 0
-                ? childrenId.map((id) => renderWrapper(store.schema[id]))
-                : null;
+            children.length !== 0 ? children.map((id) => renderWrapper(store.schema[id])) : null;
 
         return (
             <Wrapper key={id} id={id}>
@@ -50,10 +49,10 @@ const Container = () => {
         <div>
             <Context.Provider value={value}>
                 <div onClick={handleFloorAdd}>添加楼层</div>
-                <Widget manifest={{ name: 'Button', version: '1.0.0' }}>
+                <Widget manifest={{ name: 'Button', cname: '按钮', version: '1.0.0' }}>
                     <div>Button</div>
                 </Widget>
-                <Widget manifest={{ name: 'Card', version: '1.0.0' }}>
+                <Widget manifest={{ name: 'Card', cname: '卡片', version: '1.0.0' }}>
                     <div>Card</div>
                 </Widget>
                 <div style={{ marginLeft: 100, position: 'relative', width: 375 }}>

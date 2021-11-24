@@ -1,28 +1,28 @@
-import { Schema, SchemeMap, ContainerStore, Manifest } from '../common/type';
+import { Schema, SchemaMap, ContainerStore, Manifest } from '../common/type';
 import { DirectionEnum } from '../common/constant';
 import floorManifest from '../floor/manifest';
 import { uuid, minYby, lastBy, createCpnSchema } from '.';
 
 export const clone = (schema: Schema) => ({ ...schema, id: uuid() });
 
-export const getRootChildren = (schema: SchemeMap) => {
-    return schema['App'].childrenId;
+export const getRootChildren = (schema: SchemaMap) => {
+    return schema['App'].children;
 };
 
-export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] => {
-    function cloneDeep(schema: SchemeMap, id: string): Schema[] {
+export const cloneDeepBy = (schema: SchemaMap, id: string): [SchemaMap, string] => {
+    function cloneDeep(schema: SchemaMap, id: string): Schema[] {
         const target = schema[id];
         const newSchema = clone(target);
 
-        if (target.childrenId?.length === 0) {
+        if (target.children?.length === 0) {
             return [newSchema];
         }
 
-        const childrenList = target.childrenId.map((id) => cloneDeep(schema, id));
+        const childrenList = target.children.map((id) => cloneDeep(schema, id));
         childrenList.forEach((item) => {
             item[0].parent = newSchema.id;
         });
-        newSchema.childrenId = childrenList.map((item) => item[0].id);
+        newSchema.children = childrenList.map((item) => item[0].id);
 
         return [newSchema, ...[].concat(...childrenList)];
     }
@@ -39,16 +39,16 @@ export const cloneDeepBy = (schema: SchemeMap, id: string): [SchemeMap, string] 
     return [{ ...schema, ...result }, rootId];
 };
 
-export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
+export const deleteBy = (schema: SchemaMap, id: string): SchemaMap => {
     const parent = schema[schema[id].parent];
-    const brother = parent?.childrenId;
+    const brother = parent?.children;
     const cloneSchema = { ...schema };
 
     (function deepDelete(id: string) {
         const cur = cloneSchema[id];
 
-        if (cur.childrenId.length !== 0) {
-            cur.childrenId.forEach((id) => {
+        if (cur.children.length !== 0) {
+            cur.children.forEach((id) => {
                 deepDelete(id);
             });
         } else {
@@ -60,12 +60,12 @@ export const deleteBy = (schema: SchemeMap, id: string): SchemeMap => {
         ...cloneSchema,
         [parent.id]: {
             ...parent,
-            childrenId: brother?.filter((chId) => chId !== id),
+            children: brother?.filter((chId) => chId !== id),
         },
     };
 };
 
-export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap => {
+export const addBy = (schema: SchemaMap, id: string, payload: Schema): SchemaMap => {
     if (!schema) {
         return {
             [payload.id]: {
@@ -79,7 +79,7 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
     while (!container.config.canAddAsChild) {
         container = schema[container.parent];
     }
-    const childrenList = container.childrenId.map((id) => schema[id]);
+    const childrenList = container.children.map((id) => schema[id]);
     const minY = minYby(childrenList);
 
     const newSchema = {
@@ -89,6 +89,7 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
             ...payload.config,
             x: 0,
             y: minY,
+            name: payload.manifest.cname,
         },
     };
 
@@ -103,7 +104,7 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
         [newSchema.id]: newSchema,
         [container.id]: {
             ...container,
-            childrenId: [...container.childrenId, payload.id],
+            children: [...container.children, payload.id],
             config: {
                 ...containerConfig,
                 height: realHeight,
@@ -112,9 +113,9 @@ export const addBy = (schema: SchemeMap, id: string, payload: Schema): SchemeMap
     };
 };
 
-export const replaceBy = (schema: SchemeMap, from: string, to: string): SchemeMap => {
+export const replaceBy = (schema: SchemaMap, from: string, to: string): SchemaMap => {
     const parent = schema[schema[from].parent];
-    const childrenId = parent?.childrenId;
+    const children = parent?.children;
     const cloneSchema = { ...schema };
 
     const payload = { ...cloneSchema[from] };
@@ -125,7 +126,7 @@ export const replaceBy = (schema: SchemeMap, from: string, to: string): SchemeMa
         ...realSchema,
         [parent.id]: {
             ...parent,
-            childrenId: childrenId?.filter((chId) => chId !== from),
+            children: children?.filter((chId) => chId !== from),
         },
     };
 };
@@ -142,7 +143,7 @@ export const initBy = (store: ContainerStore, manifests: Manifest[]) => {
     return [result, lastBy(schemaList).id] as const;
 };
 
-export const findFloorBy = (schema: SchemeMap, id: string) => {
+export const findFloorBy = (schema: SchemaMap, id: string) => {
     let floor = schema[id];
 
     while (floor.manifest.name !== 'Floor') {
@@ -164,7 +165,7 @@ export const addFloorBy = (store: ContainerStore, direction: 'TOP' | 'BOTTOM'): 
     const container = schema[floor.parent];
     newFloor.parent = container.id;
 
-    const floorIds = [...container.childrenId];
+    const floorIds = [...container.children];
     const curIndex = floorIds.indexOf(floor.id);
 
     if (direction === DirectionEnum.TOP) {
@@ -180,29 +181,29 @@ export const addFloorBy = (store: ContainerStore, direction: 'TOP' | 'BOTTOM'): 
             ...schema,
             [container.id]: {
                 ...container,
-                childrenId: floorIds,
+                children: floorIds,
             },
             [newFloor.id]: newFloor,
         },
     };
 };
 
-export const findLastActivityId = (schema: SchemeMap, payload: Schema) => {
-    const childrenId = schema[payload.parent].childrenId;
+export const findLastActivityId = (schema: SchemaMap, payload: Schema) => {
+    const children = schema[payload.parent].children;
 
-    if (childrenId.length <= 1) {
+    if (children.length <= 1) {
         return payload.parent;
     }
 
-    const index = childrenId.indexOf(payload.id);
+    const index = children.indexOf(payload.id);
 
     if (index === -1) {
         return payload.parent;
     }
 
     if (index === 0) {
-        return childrenId[index + 1];
+        return children[index + 1];
     }
 
-    return childrenId[index - 1];
+    return children[index - 1];
 };

@@ -1,5 +1,5 @@
 import { Manifest } from '../common/type';
 
-export interface widgetProps {
+export interface WidgetProps {
     manifest: Manifest;
 }

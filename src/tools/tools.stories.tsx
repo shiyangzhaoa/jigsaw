@@ -1,11 +1,11 @@
 // Generated with script/create-component.js
-import React from "react";
-import tools from "./tools";
+import React from 'react';
+import Tools from '.';
 
 export default {
-    title: "tools"
+    title: 'tools',
 };
 
-export const WithBar = () => <tools foo="bar" />;
+export const WithBar = () => <Tools foo="bar" />;
 
-export const WithBaz = () => <tools foo="baz" />;
+export const WithBaz = () => <Tools foo="baz" />;

@@ -25,6 +25,7 @@ const Container = () => {
             ...store,
             configs: [...store.configs, config],
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const value = {

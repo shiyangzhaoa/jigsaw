@@ -12,7 +12,7 @@ import {
 import { Schema, Manifest } from '../common/type';
 import ctx from '../common/context';
 
-type ActionType = 'INIT' | 'ADD' | 'DELETE' | 'REPLACE' | 'CLONE';
+type ActionType = 'INIT' | 'ADD' | 'DELETE' | 'REPLACE' | 'CLONE' | 'UPDATE';
 
 interface Replace {
     from: string;
@@ -26,6 +26,7 @@ export enum ActionEnum {
     DELETE = 'DELETE',
     REPLACE = 'REPLACE',
     CLONE = 'CLONE',
+    UPDATE = 'UPDATE',
 }
 
 const isScheme = (val: Schema | Replace | Manifest[]): val is Schema =>
@@ -38,7 +39,7 @@ const useSchema = () => {
     const { store, setStore } = useContext(ctx);
     const { activityId, schema } = store;
 
-    function dispatch(type: 'ADD' | 'DELETE' | 'CLONE', payload: Schema);
+    function dispatch(type: 'ADD' | 'DELETE' | 'CLONE' | 'UPDATE', payload: Schema);
     function dispatch(type: 'REPLACE', payload: Replace);
     function dispatch(type: 'INIT', payload: Manifest[]);
     function dispatch(type: ActionType, payload: Schema | Replace | Manifest[]) {
@@ -65,6 +66,22 @@ const useSchema = () => {
             setStore({
                 ...store,
                 activityId: lastActivityId,
+                schema: newSchema,
+            });
+
+            return;
+        }
+
+        if (type === ActionEnum.UPDATE && isScheme(payload)) {
+            const { id } = payload;
+            const newSchema = {
+                ...schema,
+                [id]: payload,
+            };
+
+            setStore({
+                ...store,
+                activityId: payload.id,
                 schema: newSchema,
             });
 
@@ -114,7 +131,7 @@ const useSchema = () => {
         }
     }
 
-    return [store, dispatch] as const;
+    return [store, dispatch, setStore] as const;
 };
 
 export default useSchema;

@@ -1,6 +1,6 @@
-import { SchemaMap } from '../common/type';
+import { Position, SchemaMap } from '../common/type';
 import { rootId } from '../common/constant';
-import { arrDel } from '../utils';
+import { arrDel, lastBy } from '../utils';
 import { TreeData, TreeNode } from './tree.types';
 
 export const traverseDataNodes = (schema: SchemaMap) => {
@@ -65,18 +65,51 @@ export const delKey = (arr: string[], key) => {
     return newArr;
 };
 
+export const isLastChild = (treeNode: TreeNode) => {
+    const { isEnd } = treeNode;
+    return lastBy(isEnd);
+};
+
 export const getDropPosition = (
     e: React.DragEvent<HTMLDivElement>,
-    dragNode: TreeNode,
+    target: HTMLDivElement,
+    dragEle: HTMLDivElement,
+    pos: Position,
     targetNode: TreeNode,
 ) => {
-    // const target = e.target as HTMLDivElement;
-    // const targetRect = target.getBoundingClientRect();
-    // const dragNodeRect = dragNodeEle.current.getBoundingClientRect();
-    // const dragMoveLeft = dragNodeRect.left + (e.clientX - dragStartPosition.current.x);
+    const { clientY } = e;
+    const { top, height, bottom } = target.getBoundingClientRect();
+    const des = height * (1 / 4);
+    let position: number;
+    let offsetLeft: number;
 
-    // if (dragMoveLeft - targetRect.left > 25 && node.id !== dragNode.current.id) {
-    //     // console.log(node, dragNode.current);
-    //     console.log('chi');
+    if (clientY <= top + des) {
+        position = -1;
+    } else if (clientY >= bottom - des) {
+        position = 1;
+    } else {
+        position = 0;
+    }
+
+    const targetRect = target.getBoundingClientRect();
+    const dragNodeRect = dragEle.getBoundingClientRect();
+    const dragMoveLeft = dragNodeRect.left + (e.clientX - pos.x);
+
+    if (dragMoveLeft - targetRect.left > 15) {
+        offsetLeft = 1;
+    } else if (dragMoveLeft - targetRect.left < -15) {
+        offsetLeft = -1;
+    } else {
+        offsetLeft = 0;
+    }
+
+    // let node = targetNode;
+    // if (targetNode) {
+
     // }
+
+    return {
+        position,
+        offsetLeft,
+    };
 };

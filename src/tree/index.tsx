@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import useSchema from '../hooks/use-schema';
 import { Position } from '../common/type';
 import { isDefine } from '../utils';
-import { traverseDataNodes, addKey, delKey } from './utils';
+import { traverseDataNodes, addKey, delKey, getDropPosition } from './utils';
 import { TreeData, TreeNode as TreeNodeProp } from './tree.types';
 import TreeNode from './tree-node';
 
@@ -13,8 +13,9 @@ const Tree = () => {
     const [store, , setStore] = useSchema();
     const [expandedKeys, setExpandedKeys] = useState([]);
     const [treeData, setTreeData] = useState([]);
-    const [draging, setDragging] = useState(false);
-    const [dragOverNode, setDragOverNode] = useState<TreeData>(null);
+    const [dragOverNode, setDragOverNode] = useState<TreeNodeProp>(null);
+    const [dropPosition, setDropPosition] = useState(null);
+    const [offsetLeft, setOffsetLeft] = useState(0);
     const dataRef = useRef<TreeData>([]);
     const dragStartPosition = useRef<Position>(null);
     const dragNode = useRef<TreeNodeProp>(null);
@@ -52,13 +53,13 @@ const Tree = () => {
         setStore({ ...store, activityId: id });
     };
 
-    const onNodeDragEnd = () => {
+    const onWinNodeDragEnd = () => {
         setDragOverNode(null);
         cleanDragState();
     };
 
     const onWindowDragEnd = () => {
-        onNodeDragEnd();
+        onWinNodeDragEnd();
         window.removeEventListener('dragend', onWindowDragEnd);
     };
 
@@ -74,20 +75,39 @@ const Tree = () => {
         };
         dragNode.current = node;
         dragNodeEle.current = ele;
-        setDragging(true);
         setExpandedKeys(addKey(expandedKeys, id));
 
         window.addEventListener('dragend', onWindowDragEnd);
     };
 
-    const onNodeDragEnter = (e: React.DragEvent<HTMLDivElement>, node: TreeNodeProp) => {
+    const onNodeDragEnter = (
+        e: React.DragEvent<HTMLDivElement>,
+        node: TreeNodeProp,
+        ele: HTMLDivElement,
+    ) => {
         if (timeRef.current) {
             clearTimeout(timeRef.current);
         }
 
-        if (dragNode.current && node.id === dragNode.current.id) return;
+        if (!dragNode.current) return;
 
-        console.log(node);
+        const { position, offsetLeft } = getDropPosition(
+            e,
+            e.target as HTMLDivElement,
+            ele,
+            dragStartPosition.current,
+            node,
+        );
+
+        if (node.id === dragNode.current.id && position !== -1) {
+            setDragOverNode(null);
+            setDropPosition(null);
+
+            return;
+        }
+
+        setOffsetLeft(offsetLeft);
+        setDragOverNode(node);
         if (isDefine(node.expanded) && !node.expanded) {
             timeRef.current = setTimeout(() => {
                 setExpandedKeys(delKey(expandedKeys, node.id));
@@ -95,10 +115,52 @@ const Tree = () => {
         }
     };
 
-    const onNodeDragOver = (e: React.DragEvent<HTMLDivElement>, node: TreeNodeProp) => {
-        if (dragNode.current && node.id === dragNode.current.id) return;
-        console.log(123);
+    const onNodeDragOver = (
+        e: React.DragEvent<HTMLDivElement>,
+        node: TreeNodeProp,
+        ele: HTMLDivElement,
+    ) => {
+        if (node.id === dragNode.current.id) {
+            setDragOverNode(null);
+            setDropPosition(null);
+
+            return;
+        }
+
+        if (dragNode.current) {
+            const { position, offsetLeft: offset } = getDropPosition(
+                e,
+                e.target as HTMLDivElement,
+                ele,
+                dragStartPosition.current,
+                node,
+            );
+            if (position === dropPosition && offset === offsetLeft) return;
+
+            setDropPosition(position);
+            setOffsetLeft(offset);
+            setDragOverNode(node);
+            console.log(node, position, offset);
+        }
     };
+
+    const onNodeDragEnd = () => {
+        setDragOverNode(null);
+        cleanDragState();
+        dragNode.current = null;
+    };
+
+    const onNodeDrop = (e: React.DragEvent<HTMLDivElement>, node: TreeNodeProp) => {
+        setDragOverNode(null);
+        cleanDragState();
+        // const { id } = node;
+
+        // console.log('id', id, dragNode.current, dragOverNode);
+
+        dragNode.current = null;
+    };
+
+    // console.log('dragOverNode', dragOverNode);
 
     return (
         <div data-testid="tree" className="jigsaw-tree">
@@ -107,12 +169,17 @@ const Tree = () => {
                     schema={schema[data.id]}
                     {...data}
                     key={data.id}
+                    offsetLeft={offsetLeft}
+                    dropPosition={dropPosition}
                     activityId={activityId}
+                    dragOverNode={dragOverNode}
                     onExpand={onExpand}
                     onClick={onClick}
                     onNodeDragStart={onNodeDragStart}
                     onNodeDragEnter={onNodeDragEnter}
                     onNodeDragOver={onNodeDragOver}
+                    onNodeDragEnd={onNodeDragEnd}
+                    onNodeDrop={onNodeDrop}
                 />
             ))}
         </div>

@@ -19,7 +19,10 @@ export interface TreeProps {
 
 export type TreeNodeProps = TreeNode & {
     schema: Schema;
+    dropPosition: 0 | -1 | 1;
+    offsetLeft: 0 | 1;
     activityId: string;
+    dragOverNode: TreeNode;
     onExpand: (id: string) => void;
     onClick: (id: string) => void;
     onNodeDragStart: (
@@ -37,4 +40,6 @@ export type TreeNodeProps = TreeNode & {
         val: TreeNode,
         ref: HTMLDivElement,
     ) => void;
+    onNodeDragEnd: (e: React.DragEvent<HTMLDivElement>, val: TreeNode, ref: HTMLDivElement) => void;
+    onNodeDrop: (e: React.DragEvent<HTMLDivElement>, val: TreeNode, ref: HTMLDivElement) => void;
 };

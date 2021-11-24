@@ -1,12 +1,11 @@
-// Generated with script/create-component.js
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import Tools from '.';
-import { toolsProps } from './tools.types';
+import Tree from '.';
+import { TreeProps } from './tree.types';
 
 describe('Test Component', () => {
-    let props: toolsProps;
+    let props: TreeProps;
 
     beforeEach(() => {
         props = {
@@ -14,13 +13,13 @@ describe('Test Component', () => {
         };
     });
 
-    const renderComponent = () => render(<Tools {...props} />);
+    const renderComponent = () => render(<Tree {...props} />);
 
     it('should render foo text correctly', () => {
         props.foo = 'harvey was here';
         const { getByTestId } = renderComponent();
 
-        const component = getByTestId('tools');
+        const component = getByTestId('tree');
 
         expect(component).toHaveTextContent('harvey was here');
     });

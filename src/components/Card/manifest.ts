@@ -1,5 +1,6 @@
 const manifest = {
     name: 'Card',
+    cname: '卡片',
     version: '1.0.0',
 };
 

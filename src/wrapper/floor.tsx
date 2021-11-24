@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import clsx from 'clsx';
 
 import Dots from '../dots';
-import { Row, Column, Coordinate } from '../common/type';
+import { Row, Column, Position } from '../common/type';
 import { number2px, windowToWrapper } from '../utils';
 import ctx from '../common/context';
 import { WrapperProps } from './wrapper.types';
@@ -18,24 +18,20 @@ const FloorWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) =
     const { height } = config;
 
     // TODO: 和楼层的逻辑完全相同，后续抽成 hooks
-    const handleDotsMouseDown = (
-        event: React.MouseEvent<HTMLDivElement>,
-        row: Row,
-        col: Column,
-    ) => {
-        event.preventDefault();
+    const handleDotsMouseDown = (e: React.MouseEvent<HTMLDivElement>, row: Row, col: Column) => {
+        e.preventDefault();
 
-        const t1 = windowToWrapper(document.body, event.clientX, event.clientY);
+        const t1 = windowToWrapper(document.body, e.clientX, e.clientY);
         const [m, n] = getReverseBy(config, row, col);
 
-        const handleMove = (event: MouseEvent) => {
-            const t2 = windowToWrapper(document.body, event.clientX, event.clientY);
+        const handleMove = (e: MouseEvent) => {
+            const t2 = windowToWrapper(document.body, e.clientX, e.clientY);
             const distance = {
                 x: t2.x - t1.x,
                 y: t2.y - t1.y,
             };
 
-            let realLoc: Coordinate;
+            let realLoc: Position;
 
             if (row === 'center') {
                 realLoc = {
@@ -83,8 +79,8 @@ const FloorWrapper = ({ id, children }: React.PropsWithChildren<WrapperProps>) =
         document.addEventListener('mouseup', handleMouseUp);
     };
 
-    const handleFloorClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        event.preventDefault();
+    const handleFloorClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.preventDefault();
         setStore({
             ...store,
             activityId: id,

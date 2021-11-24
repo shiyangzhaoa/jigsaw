@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import ReactJson from 'react-json-view';
 
-import Widget from '.';
+import Widget from '../widget';
+import Tree from '.';
 import { ContainerStore } from '../common/type';
 import Context, { defaultContext } from '../common/context';
+import { treeDataDemo } from './demo';
 
 const manifest = {
     name: 'test',
+    cname: '测试',
     version: '0.0.1',
     icon: '',
     preview: '',
 };
 
-const Container = () => {
-    const [store, setStore] = useState<ContainerStore>(defaultContext.store);
+const TreeCpn = () => {
+    const [store, setStore] = useState<ContainerStore>({
+        ...defaultContext.store,
+        schema: treeDataDemo,
+    });
     useEffect(() => {
         const config = {
             name: 'test',
@@ -39,14 +44,14 @@ const Container = () => {
                 <Widget manifest={manifest}>
                     <div>添加</div>
                 </Widget>
+                <Tree />
             </Context.Provider>
-            <ReactJson src={store.schema} />
         </div>
     );
 };
 
 export default {
-    title: 'Widget',
+    title: 'Tree',
 };
 
-export const WidgetDemo = () => <Container />;
+export const TreeDemo = () => <TreeCpn />;

@@ -6,7 +6,7 @@ import App from '../components/App';
 
 const { config, manifest } = App;
 
-const configs = Object.entries(componentMap).map(([_, { config }]) => config);
+const configs = Object.entries(componentMap).map(([, { config }]) => config);
 
 export const defaultContext = {
     store: {
@@ -16,7 +16,7 @@ export const defaultContext = {
             App: {
                 id: 'App',
                 props: {},
-                childrenId: [],
+                children: [],
                 config,
                 manifest,
             },

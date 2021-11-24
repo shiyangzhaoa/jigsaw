@@ -1,27 +1,28 @@
-// Generated with script/create-component.js
-import React from "react";
-import { render } from "@testing-library/react";
+import React from 'react';
+import { render } from '@testing-library/react';
 
-import widget from "./widget";
-import { widgetProps } from "./widget.types";
+import Widget from '.';
+import { WidgetProps } from './widget.types';
 
-describe("Test Component", () => {
-  let props: widgetProps;
+describe('Test Component', () => {
+    let props: WidgetProps;
 
-  beforeEach(() => {
-    props = {
-      foo: "bar"
-    };
-  });
+    beforeEach(() => {
+        props = {
+            manifest: {
+                name: 'Floor',
+                version: '1.0.0',
+            },
+        };
+    });
 
-  const renderComponent = () => render(<widget {...props} />);
+    const renderComponent = () => render(<Widget {...props} />);
 
-  it("should render foo text correctly", () => {
-    props.foo = "harvey was here";
-    const { getByTestId } = renderComponent();
+    it('should render foo text correctly', () => {
+        const { getByTestId } = renderComponent();
 
-    const component = getByTestId("widget");
+        const component = getByTestId('widget');
 
-    expect(component).toHaveTextContent("harvey was here");
-  });
+        expect(component).toHaveTextContent('harvey was here');
+    });
 });

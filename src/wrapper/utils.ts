@@ -1,5 +1,5 @@
 import { isNumber } from '../utils';
-import { Config, Coordinate, Row, Column } from '../common/type';
+import { Config, Position, Row, Column } from '../common/type';
 
 export const getDotsLocBy = (config: Config) => {
     const { x, y, width, height } = config;
@@ -59,7 +59,7 @@ export const getReverseBy = (config: Config, row: Row, col: Column) => {
     return [dotsList[index - num], dotsList[num]] as const;
 };
 
-export const resolveMouseEffect = (firstLoc: Coordinate, realLoc: Coordinate) => {
+export const resolveMouseEffect = (firstLoc: Position, realLoc: Position) => {
     const { x, y } = firstLoc;
     let newX: number;
     let newY: number;

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": "src",
+    "baseUrl": "./",
     "declaration": true,
     "declarationDir": "build",
     "module": "esnext",
@@ -11,14 +12,14 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "index.d.ts"],
   "exclude": [
     "node_modules",
     "build",
     "storybook-static",
     "src/**/*.stories.tsx",
     "src/**/*.test.tsx"
-  ]
+  ],
 }

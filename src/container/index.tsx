@@ -6,7 +6,7 @@ import { containerProps } from './container.types';
 
 import './container.scss';
 
-const container: React.FC<containerProps> = ({ foo }) => {
+const Container: React.FC<containerProps> = () => {
     const [store, setStore] = useState<ContainerStore>(null);
     const value = {
         store,
@@ -15,11 +15,9 @@ const container: React.FC<containerProps> = ({ foo }) => {
 
     return (
         <Context.Provider value={value}>
-            <div data-testid="container" className="foo-bar">
-                {foo}
-            </div>
+            <div data-testid="container" className="foo-bar"></div>
         </Context.Provider>
     );
 };
 
-export default container;
+export default Container;
